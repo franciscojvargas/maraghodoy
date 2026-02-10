@@ -1,1 +1,1 @@
-export { siteConfig } from "@/content/site";
+export { siteConfig, principalImages } from "@/content/site";

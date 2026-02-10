@@ -1,16 +1,9 @@
 "use client";
 
 import { usePresentationContent } from "@/hooks/usePresentationContent";
+import { principalImages } from "@/lib/site";
 import ImageTextSection from "./ImageTextSection";
 import VenueLogos from "./VenueLogos";
-
-const principalImages = [
-  "/images/press-1.jpg",
-  "/images/press-2.jpg",
-  "/images/press-3.jpg",
-  "/images/press-4.jpg",
-  "/images/press-5.jpg",
-];
 
 export default function PrincipalContent() {
   const { blocks } = usePresentationContent();
@@ -20,7 +13,7 @@ export default function PrincipalContent() {
       {blocks.map((text, i) => (
         <ImageTextSection
           key={i}
-          src={principalImages[i] ?? principalImages[0]}
+          src={principalImages[i] ?? principalImages[0]!}
           alt="Mara Ghodoy"
           extraBelow={i === 3 ? <VenueLogos /> : undefined}
         >

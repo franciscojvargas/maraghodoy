@@ -105,6 +105,7 @@ export default function MediaSectionDesktop() {
                 <iframe
                   title="Mara Ghodoy - Electrolunch"
                   src="https://www.youtube.com/embed/vWLnck3Br4k"
+                  loading="lazy"
                   className="w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -126,6 +127,7 @@ export default function MediaSectionDesktop() {
                 <iframe
                   title="Mara Ghodoy - Rastro Live"
                   src="https://www.youtube.com/embed/MSB1qcutY_M"
+                  loading="lazy"
                   className="w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -218,6 +220,7 @@ export default function MediaSectionDesktop() {
                   width="100%"
                   height="166"
                   allow="autoplay"
+                  loading="lazy"
                   src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&inverse=false&auto_play=false&show_user=true`}
                   className="border-0"
                 />

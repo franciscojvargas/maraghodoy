@@ -4,13 +4,11 @@ import dynamic from "next/dynamic";
 import { usePresentationContent } from "@/hooks/usePresentationContent";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { useSlider } from "@/context/SliderContext";
+import { principalImages } from "@/lib/site";
 import VerticalSlider from "@/components/VerticalSlider";
 import HeroSlide from "@/components/HeroSlide";
 import ImageSlide from "@/components/ImageSlide";
 import VenueLogos from "@/components/VenueLogos";
-import MediaSectionView from "@/components/MediaSectionView";
-import RiderSectionView from "@/components/RiderSectionView";
-import ContactSectionView from "@/components/ContactSectionView";
 import SectionLinksSlide from "@/components/SectionLinksSlide";
 
 const DesktopScrollPage = dynamic(
@@ -18,13 +16,9 @@ const DesktopScrollPage = dynamic(
   { ssr: true }
 );
 
-const principalImages = [
-  "/images/press-1.jpg",
-  "/images/press-2.jpg",
-  "/images/press-3.jpg",
-  "/images/press-4.jpg",
-  "/images/press-5.jpg",
-];
+const MediaSectionView = dynamic(() => import("@/components/MediaSectionView"), { ssr: false });
+const RiderSectionView = dynamic(() => import("@/components/RiderSectionView"), { ssr: false });
+const ContactSectionView = dynamic(() => import("@/components/ContactSectionView"), { ssr: false });
 
 function MobileContent() {
   const { blocks } = usePresentationContent();
@@ -37,7 +31,7 @@ function MobileContent() {
         {blocks.map((text, i) => (
           <ImageSlide
             key={i}
-            src={principalImages[i] ?? principalImages[0]}
+            src={principalImages[i] ?? principalImages[0]!}
             alt="Mara Ghodoy"
             extraBelow={i === 3 ? <VenueLogos /> : undefined}
           >
