@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { usePresentationContent } from "@/hooks/usePresentationContent";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function HeroSlide() {
   const { hero } = usePresentationContent();
+  const { t } = useLanguage();
 
   return (
     <div className="flex-shrink-0 w-full h-screen max-h-[100dvh] flex flex-col text-center px-6 relative overflow-hidden pt-20">
@@ -27,6 +29,25 @@ export default function HeroSlide() {
         <p className="mt-2 text-sm text-neutral-400 uppercase tracking-widest">
           {hero.tagline}
         </p>
+      </div>
+      <div
+        className="relative z-10 flex flex-col items-center pb-6"
+        aria-hidden
+      >
+        <span className="text-[10px] text-white/50 uppercase tracking-widest mb-1.5">
+          {t.heroSwipeHint}
+        </span>
+        <svg
+          className="w-6 h-6 text-white/50 animate-bounce"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
       </div>
     </div>
   );

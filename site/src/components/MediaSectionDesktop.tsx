@@ -163,6 +163,7 @@ export default function MediaSectionDesktop() {
               </span>
               <div className="min-w-0">
                 <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.downloadPressKitPdf}</span>
+                <span className="block text-white font-medium">{t.downloadPressKitSubtitle}</span>
               </div>
             </motion.a>
             <motion.a
@@ -188,16 +189,24 @@ export default function MediaSectionDesktop() {
       <div className="mt-16 pb-20">
         <AppleReveal delay={0.08}>
           <h2 className="text-2xl font-semibold mb-6">{t.soundcloudLabel}</h2>
-          <p className="text-neutral-400 text-sm mb-3">{t.soundcloudProfileText}</p>
-          <a
-            href={siteConfig.socials.soundcloud}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/5 px-5 py-2.5 text-sm font-medium text-white hover:bg-white/10 hover:border-white/60 transition mb-8"
-          >
-            <IconSoundCloud className="w-5 h-5 shrink-0 text-[#ff5500]" />
-            {t.openSoundCloud}
-          </a>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <motion.a
+              href={siteConfig.socials.soundcloud}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200 w-full"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-[#ff5500] transition-colors shrink-0">
+                <IconSoundCloud className="w-8 h-8" />
+              </span>
+              <div className="min-w-0">
+                <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.soundcloudLabel}</span>
+                <span className="block text-white font-medium">{t.soundcloudButtonSubtitle}</span>
+              </div>
+            </motion.a>
+          </div>
           <div className="space-y-8">
             {siteConfig.soundcloudSessions.map((url) => (
               <div key={url} className="rounded-xl overflow-hidden bg-neutral-900/80 ring-1 ring-neutral-800/50">
