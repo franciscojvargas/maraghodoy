@@ -127,6 +127,7 @@ export function MediaContent() {
             </span>
             <div className="min-w-0">
               <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.downloadPressKitPdf}</span>
+              <span className="block text-white font-medium">{t.downloadPressKitSubtitle}</span>
             </div>
           </a>
           <a
@@ -148,16 +149,23 @@ export function MediaContent() {
 
       <div>
         <h2 className="text-2xl font-semibold mb-4 sm:mb-6">{t.soundcloudLabel}</h2>
-        <a
-          href={siteConfig.socials.soundcloud}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/5 px-5 py-2.5 text-sm font-medium text-white hover:bg-white/10 hover:border-white/60 transition"
-          aria-label={t.openSoundCloud}
-        >
-          <IconSoundCloud className="w-5 h-5 shrink-0 text-[#ff5500]" />
-          <span>{t.openSoundCloud}</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 sm:mb-8">
+          <a
+            href={siteConfig.socials.soundcloud}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200 w-full"
+            aria-label={t.openSoundCloud}
+          >
+          <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-[#ff5500] transition-colors shrink-0">
+            <IconSoundCloud className="w-8 h-8" />
+          </span>
+          <div className="min-w-0">
+            <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.soundcloudLabel}</span>
+            <span className="block text-white font-medium">{t.soundcloudButtonSubtitle}</span>
+          </div>
         </a>
+        </div>
         <div className="space-y-4 sm:space-y-6">
           {siteConfig.soundcloudSessions.map((url) => (
             <div key={url} className="rounded-lg sm:rounded-xl overflow-hidden bg-neutral-900/80">
