@@ -1,3 +1,11 @@
+export const principalImages = [
+  "/images/press-1.jpg",
+  "/images/press-2.jpg",
+  "/images/press-3.jpg",
+  "/images/press-4.jpg",
+  "/images/press-5.jpg",
+] as const;
+
 export const siteConfig = {
   name: "Mara Ghodoy",
   title: "Mara Ghodoy | DJ & Producer",
@@ -5,8 +13,6 @@ export const siteConfig = {
     "Official press kit of DJ Mara Ghodoy. Hardgroove & hypnotic techno. Music, videos, press photos and booking contact. Resident at Sala Cosmos, Sevilla.",
   url: "https://maraghodoy.com",
   email: "maraghodoy@gmail.com",
-  base: "Sevilla, España",
-  yearsActive: "5 años",
   socials: {
     instagram: "https://instagram.com/maraghodoy",
     soundcloud: "https://soundcloud.com/mara-ghodoy",

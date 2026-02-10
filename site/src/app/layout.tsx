@@ -7,6 +7,7 @@ import ClientLayout from "@/components/ClientLayout";
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    images: ["/images/og.jpg"],
+    images: ["/images/hero.jpg"],
     type: "website",
   },
 };
