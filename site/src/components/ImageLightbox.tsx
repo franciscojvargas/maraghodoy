@@ -50,7 +50,7 @@ export function ImageLightbox({
 
   if (!image || !mounted) return null;
 
-  const downloadFilename = image.src.split("/").pop() ?? `maraghodoy-${currentIndex + 1}.jpg`;
+  const downloadFilename = image.src.split("/").pop() ?? `maraghodoy-${currentIndex + 1}.webp`;
 
   const lightbox = (
     <div

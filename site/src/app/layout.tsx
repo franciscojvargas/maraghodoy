@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    images: ["/images/hero.jpg"],
+    images: ["/images/hero.webp"],
     type: "website",
   },
 };
