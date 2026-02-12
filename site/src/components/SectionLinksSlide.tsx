@@ -7,7 +7,7 @@ import { navLinks } from "@/content";
 import type { MobileSection } from "@/context/SliderContext";
 
 const sectionsToShow: MobileSection[] = ["media", "rider", "contacto"];
-const BACKGROUND_IMAGE = "/images/cabina-vermas.jpg";
+const BACKGROUND_IMAGE = "/images/cabina-vermas.webp";
 
 const buttonClass =
   "rounded-full border border-white/40 bg-white/5 px-6 py-3 text-sm font-medium text-white hover:bg-white/10 hover:border-white/60 transition w-full max-w-xs mx-auto block text-center";

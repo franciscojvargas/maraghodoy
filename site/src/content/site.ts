@@ -1,9 +1,9 @@
 export const principalImages = [
-  "/images/press-1.jpg",
-  "/images/press-2.jpg",
-  "/images/press-3.jpg",
-  "/images/press-4.jpg",
-  "/images/press-5.jpg",
+  "/images/press-1.webp",
+  "/images/press-2.webp",
+  "/images/press-3.webp",
+  "/images/press-4.webp",
+  "/images/press-5.webp",
 ] as const;
 
 export const siteConfig = {

@@ -21,7 +21,7 @@ export default function DesktopScrollPage() {
       <section id="presentacion" className="min-h-screen flex flex-col items-center justify-center text-center px-6 relative overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/hero.jpg"
+            src="/images/hero.webp"
             alt="Mara Ghodoy"
             fill
             className="object-cover opacity-50"
