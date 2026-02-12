@@ -21,7 +21,7 @@ export default function HeroSlide() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
       </div>
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center max-w-3xl mx-auto">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-end pb-10 md:justify-center md:pb-0 max-w-3xl mx-auto">
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
           {hero.title}
         </h1>
