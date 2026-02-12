@@ -24,7 +24,7 @@ export const siteConfig = {
     "https://soundcloud.com/batcavepodcast/batcave-podcast-045-by-mara",
   ],
   downloads: {
-    pressKitPdf: "https://drive.google.com/",
-    mediaFolder: "https://drive.google.com/",
+    pressKitPdf: "https://drive.google.com/drive/folders/1hBNHAowXAhwakbR0eZweSXjTt4NhztuP?usp=sharing",
+    mediaFolder: "https://drive.google.com/drive/folders/1hBNHAowXAhwakbR0eZweSXjTt4NhztuP?usp=sharing",
   },
 };
