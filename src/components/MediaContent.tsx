@@ -26,6 +26,44 @@ export function MediaContent() {
   return (
     <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-5xl mx-auto pb-16 sm:pb-20">
       <div className="mb-8 sm:mb-12">
+        <h2 className="text-2xl font-semibold mb-4 sm:mb-6">{t.downloadSectionTitle}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <a
+            href={siteConfig.downloads.pressKitPdf}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+          >
+            <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-white transition-colors shrink-0">
+              <PdfIcon className="w-8 h-8" />
+            </span>
+            <div className="min-w-0">
+              <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.downloadPressKitPdf}</span>
+              <span className="block text-white font-medium">{t.downloadPressKitSubtitle}</span>
+            </div>
+          </a>
+          <a
+            href={siteConfig.downloads.mediaFolder}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+          >
+            <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-white transition-colors shrink-0">
+              <DownloadArrowIcon className="w-8 h-8" />
+            </span>
+            <div className="min-w-0">
+              <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">
+                Google Drive
+              </span>
+              <span className="block text-white font-medium">
+                {t.downloadMediaFolderSubtitle}
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div className="mb-8 sm:mb-12">
         <h2 className="text-2xl font-semibold mb-4 sm:mb-6">{t.imagesTitle}</h2>
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {initialImages.map(({ src, alt }) => (
@@ -115,61 +153,10 @@ export function MediaContent() {
         </div>
       </div>
 
-      <div className="mb-8 sm:mb-12">
-        <h2 className="text-2xl font-semibold mb-4 sm:mb-6">{t.downloadSectionTitle}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <a
-            href={siteConfig.downloads.pressKitPdf}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
-          >
-            <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-white transition-colors shrink-0">
-              <PdfIcon className="w-8 h-8" />
-            </span>
-            <div className="min-w-0">
-              <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.downloadPressKitPdf}</span>
-              <span className="block text-white font-medium">{t.downloadPressKitSubtitle}</span>
-            </div>
-          </a>
-          <a
-            href={siteConfig.downloads.mediaFolder}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
-          >
-            <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-white transition-colors shrink-0">
-              <DownloadArrowIcon className="w-8 h-8" />
-            </span>
-            <div className="min-w-0">
-              <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.downloadMediaFolder}</span>
-              <span className="block text-white font-medium">Google Drive</span>
-            </div>
-          </a>
-        </div>
-      </div>
-
       <div>
         <h2 className="text-2xl font-semibold mb-4 sm:mb-6">{t.soundcloudLabel}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 sm:mb-8">
-          <a
-            href={siteConfig.socials.soundcloud}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200 w-full"
-            aria-label={t.openSoundCloud}
-          >
-          <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-[#ff5500] transition-colors shrink-0">
-            <IconSoundCloud className="w-8 h-8" />
-          </span>
-          <div className="min-w-0">
-            <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.soundcloudLabel}</span>
-            <span className="block text-white font-medium">{t.soundcloudButtonSubtitle}</span>
-          </div>
-        </a>
-        </div>
-        <div className="space-y-4 sm:space-y-6">
-          {siteConfig.soundcloudSessions.map((url) => (
+        <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+          {[siteConfig.soundcloudSessions[0]].map((url) => (
             <div key={url} className="rounded-lg sm:rounded-xl overflow-hidden bg-neutral-900/80">
               <iframe
                 title={t[soundcloudSessionTitles[url] ?? "soundcloudSession1"]}
@@ -182,6 +169,23 @@ export function MediaContent() {
               />
             </div>
           ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <a
+            href={siteConfig.socials.soundcloud}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200 w-full"
+            aria-label={t.openSoundCloud}
+          >
+            <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-[#ff5500] transition-colors shrink-0">
+              <IconSoundCloud className="w-8 h-8" />
+            </span>
+            <div className="min-w-0">
+              <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.soundcloudLabel}</span>
+              <span className="block text-white font-medium">{t.soundcloudButtonSubtitle}</span>
+            </div>
+          </a>
         </div>
       </div>
     </div>
