@@ -27,49 +27,7 @@ export default function MediaSectionDesktop() {
 
   return (
     <section className="px-6 py-16 max-w-5xl mx-auto">
-      <AppleReveal delay={0.05}>
-        <h2 className="text-2xl font-semibold mb-6">{t.downloadSectionTitle}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <motion.a
-              href={siteConfig.downloads.pressKitPdf}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-white transition-colors shrink-0">
-                <PdfIcon className="w-8 h-8" />
-              </span>
-              <div className="min-w-0">
-                <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.downloadPressKitPdf}</span>
-                <span className="block text-white font-medium">{t.downloadPressKitSubtitle}</span>
-              </div>
-            </motion.a>
-            <motion.a
-              href={siteConfig.downloads.mediaFolder}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-white transition-colors shrink-0">
-                <DownloadArrowIcon className="w-8 h-8" />
-              </span>
-              <div className="min-w-0">
-                <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">
-                  Google Drive
-                </span>
-                <span className="block text-white font-medium">
-                  {t.downloadMediaFolderSubtitle}
-                </span>
-              </div>
-            </motion.a>
-        </div>
-      </AppleReveal>
-
-      <div className="mt-16">
+      <div className="mt-0">
         <AppleReveal delay={0}>
           <h2 className="text-2xl font-semibold mb-6">{t.imagesTitle}</h2>
           <AppleStagger className="grid grid-cols-2 md:grid-cols-3 gap-4" staggerDelay={0.07}>
@@ -227,6 +185,50 @@ export default function MediaSectionDesktop() {
               <div className="min-w-0">
                 <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.soundcloudLabel}</span>
                 <span className="block text-white font-medium">{t.soundcloudButtonSubtitle}</span>
+              </div>
+            </motion.a>
+          </div>
+        </AppleReveal>
+      </div>
+
+      <div className="mt-16">
+        <AppleReveal delay={0.05}>
+          <h2 className="text-2xl font-semibold mb-6">{t.downloadSectionTitle}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <motion.a
+              href={siteConfig.downloads.pressKitPdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-white transition-colors shrink-0">
+                <PdfIcon className="w-8 h-8" />
+              </span>
+              <div className="min-w-0">
+                <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">{t.downloadPressKitPdf}</span>
+                <span className="block text-white font-medium">{t.downloadPressKitSubtitle}</span>
+              </div>
+            </motion.a>
+            <motion.a
+              href={siteConfig.downloads.mediaFolder}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-4 p-5 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 group-hover:bg-white/15 text-white transition-colors shrink-0">
+                <DownloadArrowIcon className="w-8 h-8" />
+              </span>
+              <div className="min-w-0">
+                <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">
+                  Google Drive
+                </span>
+                <span className="block text-white font-medium">
+                  {t.downloadMediaFolderSubtitle}
+                </span>
               </div>
             </motion.a>
           </div>
