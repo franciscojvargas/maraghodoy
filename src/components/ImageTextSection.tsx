@@ -10,10 +10,11 @@ type Props = {
   src: string;
   alt: string;
   children: React.ReactNode;
+  extraAbove?: React.ReactNode;
   extraBelow?: React.ReactNode;
 };
 
-export default function ImageTextSection({ src, alt, children, extraBelow }: Props) {
+export default function ImageTextSection({ src, alt, children, extraAbove, extraBelow }: Props) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -48,6 +49,7 @@ export default function ImageTextSection({ src, alt, children, extraBelow }: Pro
         transition={{ duration: 1, ease: appleEase }}
         className="relative z-10 px-6 max-w-2xl text-center"
       >
+        {extraAbove}
         {typeof children === "string" && children.includes("\n") ? (
           <div className="text-lg md:text-xl text-neutral-100 leading-relaxed drop-shadow-lg text-justify space-y-2">
             {children.split("\n").map((line, i) => (
