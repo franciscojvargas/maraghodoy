@@ -23,7 +23,7 @@ export default {
   ],
   riderTitle: "Technical Rider",
   riderSetup: "DJ Setup",
-  riderSetupList: ["Pioneer DJ DJM-A9", "Mínimo 3 × CDJ-3000", "Preferido: 4 × CDJ-3000"],
+  riderSetupList: ["Pioneer DJ DJM-V10 / Pioneer DJ DJM-A9", "Mínimo: 3 × CDJ-3000", "Preferido: 4 × CDJ-3000"],
   riderReqs: "Requisitos adicionales",
   riderReqsList: [
     "Cabina estable (sin vibraciones)",
