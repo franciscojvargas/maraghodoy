@@ -14,7 +14,7 @@ import SectionLinksSlide from "@/components/SectionLinksSlide";
 
 const COSMOS_LOGO_BLOCK_INDEX = 2;
 
-const cosmosLogoBelow = (
+const cosmosLogoAbove = (
   <div className="flex justify-center mt-8">
     <span className="relative block h-36 w-56 md:h-40 md:w-72">
       <Image
@@ -50,8 +50,8 @@ function MobileContent() {
             key={i}
             src={principalImages[i] ?? principalImages[0]!}
             alt="Mara Ghodoy"
-            extraBelow={
-              i === COSMOS_LOGO_BLOCK_INDEX ? cosmosLogoBelow : i === 3 ? <VenueLogos /> : undefined
+            extraAbove={
+              i === COSMOS_LOGO_BLOCK_INDEX ? cosmosLogoAbove : i === 3 ? <VenueLogos /> : undefined
             }
           >
             {text}
