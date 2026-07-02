@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { usePresentationContent } from "@/hooks/usePresentationContent";
-import { principalImages } from "@/lib/site";
+import { principalImages } from "@/content/site";
 import ImageTextSection from "./ImageTextSection";
 import VenueLogos from "./VenueLogos";
 
@@ -23,7 +23,7 @@ export default function PrincipalContent() {
               <div className="flex justify-center mt-8">
                 <span className="relative block h-36 w-56 md:h-40 md:w-72">
                   <Image
-                    src="/images/venues/cosmos.png"
+                    src="/images/venues/cosmos.webp"
                     alt="Sala Cosmos"
                     fill
                     className="object-contain object-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"

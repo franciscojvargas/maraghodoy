@@ -1,18 +1,18 @@
 "use client";
 
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSlider } from "@/context/SliderContext";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { siteConfig } from "@/lib/site";
-import type { NavLabelKey } from "@/lib/translations";
-import { navLinks } from "@/lib/translations";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
+import { useMounted } from "@/hooks/useMounted";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { siteConfig } from "@/content/site";
+import type { NavLabelKey } from "@/content";
+import { navLinks } from "@/content";
 import { IconSoundCloud, IconInstagram, IconYouTube } from "./SocialIcons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-
-const navItems = [...navLinks];
 
 function getNavLabel(href: string, t: Record<NavLabelKey, string>) {
   const item = navLinks.find((l) => l.href === href);
@@ -52,12 +52,8 @@ export default function Nav() {
   const isMobile = useIsMobile();
   const { goToSlide, currentIndex, setCurrentSection, currentSection } = useSlider();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (isMobile) return;
@@ -66,15 +62,18 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isMobile]);
 
+  useLockBodyScroll(mobileOpen);
+
+  const menuRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(menuRef, mobileOpen);
+
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
+    if (!mobileOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
     };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [mobileOpen]);
 
   const closeMenu = () => setMobileOpen(false);
@@ -82,8 +81,6 @@ export default function Nav() {
   const headerScrolled = isMobile
     ? currentSection !== "presentacion" || currentIndex > 0
     : scrolled;
-
-  const displayNavItems = navItems;
 
   const mobileMenu = (
     <AnimatePresence>
@@ -100,15 +97,19 @@ export default function Nav() {
             style={{ top: 0, left: 0, right: 0, bottom: 0 }}
           />
           <motion.div
+            ref={menuRef}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 200 }}
             className="fixed top-0 right-0 bottom-0 w-full max-w-[280px] z-[9999] flex flex-col bg-neutral-950 border-l border-neutral-700 shadow-2xl"
             style={{ boxShadow: "-10px 0 40px rgba(0,0,0,0.5)" }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú"
           >
             <div className="flex flex-col gap-0.5 pt-24 pb-8 px-6 overflow-y-auto">
-              {displayNavItems.map(({ href, section }) => (
+              {navLinks.map(({ href, section }) => (
                 <button
                   key={href}
                   type="button"
@@ -116,7 +117,10 @@ export default function Nav() {
                     setCurrentSection(section);
                     closeMenu();
                   }}
-                  className="py-3.5 px-4 rounded-lg text-left text-white font-medium hover:bg-white/10 active:bg-white/15 transition w-full"
+                  aria-current={currentSection === section ? "page" : undefined}
+                  className={`py-3.5 px-4 rounded-lg text-left font-medium hover:bg-white/10 active:bg-white/15 transition w-full ${
+                    currentSection === section ? "text-white bg-white/5" : "text-neutral-300"
+                  }`}
                 >
                   {getNavLabel(href, t)}
                 </button>
@@ -218,8 +222,8 @@ export default function Nav() {
               {siteConfig.name}
             </button>
           ) : (
-            <Link
-              href="/#presentacion"
+            <a
+              href="#presentacion"
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById("presentacion")?.scrollIntoView({ behavior: "smooth" });
@@ -227,28 +231,31 @@ export default function Nav() {
               className="text-lg font-semibold text-white hover:opacity-80 transition flex items-center min-h-[44px]"
             >
               {siteConfig.name}
-            </Link>
+            </a>
           )}
 
           <div className="hidden sm:flex items-center gap-1 md:gap-6">
-            {displayNavItems.map(({ href, section }) =>
+            {navLinks.map(({ href, section }) =>
               isMobile ? (
                 <button
                   key={href}
                   type="button"
                   onClick={() => setCurrentSection(section)}
-                  className="text-sm font-medium transition px-3 py-2 rounded-lg text-neutral-400 hover:text-white min-h-[44px]"
+                  aria-current={currentSection === section ? "page" : undefined}
+                  className={`text-sm font-medium transition px-3 py-2 rounded-lg hover:text-white min-h-[44px] ${
+                    currentSection === section ? "text-white" : "text-neutral-400"
+                  }`}
                 >
                   {getNavLabel(href, t)}
                 </button>
               ) : (
-                <Link
+                <a
                   key={href}
-                  href={href === "/" ? "/#presentacion" : `/#${href.slice(1)}`}
+                  href={`#${section}`}
                   className="text-sm font-medium transition px-3 py-2 rounded-lg text-neutral-400 hover:text-white"
                 >
                   {getNavLabel(href, t)}
-                </Link>
+                </a>
               )
             )}
             <div className="flex items-center gap-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 px-1 py-1">

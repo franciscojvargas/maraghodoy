@@ -1,8 +1,13 @@
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
+import { useMounted } from "@/hooks/useMounted";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+
+const SWIPE_THRESHOLD = 50;
 
 type ImageItem = { src: string; alt: string };
 
@@ -34,19 +39,33 @@ export function ImageLightbox({
     [onClose, onSelectIndex, currentIndex, hasPrev, hasNext]
   );
 
+  useLockBodyScroll();
+
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
-  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    [images[currentIndex - 1], images[currentIndex + 1]].forEach((adjacent) => {
+      if (adjacent) new window.Image().src = adjacent.src;
+    });
+  }, [images, currentIndex]);
+
+  const rootRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(rootRef, true);
+
+  const touchStartX = useRef(0);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (delta < -SWIPE_THRESHOLD && hasNext) onSelectIndex(currentIndex + 1);
+    else if (delta > SWIPE_THRESHOLD && hasPrev) onSelectIndex(currentIndex - 1);
+  };
+
+  const mounted = useMounted();
 
   if (!image || !mounted) return null;
 
@@ -54,9 +73,12 @@ export function ImageLightbox({
 
   const lightbox = (
     <div
+      ref={rootRef}
       className="fixed inset-0 flex flex-col bg-black"
       style={{ zIndex: 99999 }}
       onClick={onClose}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
       role="dialog"
       aria-modal="true"
       aria-label="Vista ampliada de la imagen"
