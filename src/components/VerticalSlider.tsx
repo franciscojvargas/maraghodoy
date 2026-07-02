@@ -4,6 +4,8 @@ import { useRef, useEffect, useLayoutEffect } from "react";
 import React from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useSlider } from "@/context/SliderContext";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const SWIPE_THRESHOLD = 35;
 
@@ -17,23 +19,20 @@ function SliderInner({ children }: { children: React.ReactNode }) {
     setTotalSlides(total);
   }, [total, setTotalSlides]);
 
+  const isMobile = useIsMobile();
+  useLockBodyScroll(isMobile);
+
   useEffect(() => {
+    if (!isMobile) return;
     const html = document.documentElement;
     const body = document.body;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    const prevHeight = html.style.height;
-    html.style.overflow = "hidden";
     html.style.height = "100%";
-    body.style.overflow = "hidden";
     body.style.height = "100%";
     return () => {
-      html.style.overflow = prevHtmlOverflow;
-      html.style.height = prevHeight;
-      body.style.overflow = prevBodyOverflow;
+      html.style.height = "";
       body.style.height = "";
     };
-  }, []);
+  }, [isMobile]);
 
   const y = useMotionValue(0);
   const translateY = useTransform(y, (v) => `${v}dvh`);
@@ -48,7 +47,9 @@ function SliderInner({ children }: { children: React.ReactNode }) {
   }, [currentIndex, y]);
 
   const currentIndexRef = useRef(currentIndex);
-  currentIndexRef.current = currentIndex;
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
 
   useEffect(() => {
     const el = ref.current;

@@ -1,8 +1,19 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import type { Lang } from "@/lib/translations";
-import { translations } from "@/lib/translations";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
+import { usePathname } from "next/navigation";
+import type { Lang } from "@/content";
+import { translations } from "@/content";
+
+const LANG_STORAGE_KEY = "maraghodoy-lang";
 
 type LanguageContextType = {
   lang: Lang;
@@ -12,9 +23,34 @@ type LanguageContextType = {
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
+const emptySubscribe = () => () => {};
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("es");
-  const setLang = useCallback((l: Lang) => setLangState(l), []);
+  const pathname = usePathname();
+  const routeLang: Lang = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "es";
+
+  const getSnapshot = useCallback((): Lang => {
+    if (routeLang === "en") return "en";
+    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+    if (stored === "es" || stored === "en") return stored;
+    return navigator.language.toLowerCase().startsWith("es") ? "es" : "en";
+  }, [routeLang]);
+
+  const detectedLang = useSyncExternalStore(emptySubscribe, getSnapshot, () => routeLang);
+  const [override, setOverride] = useState<Lang | null>(null);
+  const lang = override ?? detectedLang;
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  const setLang = useCallback((l: Lang) => {
+    setOverride(l);
+    window.localStorage.setItem(LANG_STORAGE_KEY, l);
+    const target = l === "en" ? "/en" : "/";
+    window.history.replaceState(null, "", `${target}${window.location.hash}`);
+  }, []);
+
   const t = translations[lang];
 
   return (

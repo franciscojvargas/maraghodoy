@@ -18,11 +18,18 @@ export const siteConfig = {
     soundcloud: "https://soundcloud.com/mara-ghodoy",
     youtube: "https://youtu.be/vWLnck3Br4k",
   },
+  videos: [
+    { id: "vWLnck3Br4k", titleKey: "videoElectrolunch" },
+    { id: "MSB1qcutY_M", titleKey: "videoRastroLive" },
+  ],
   soundcloudSessions: [
-    "https://soundcloud.com/mara-ghodoy/electrolunch-07-04-2026-parque"
+    {
+      url: "https://soundcloud.com/mara-ghodoy/electrolunch-07-04-2026-parque",
+      title: "Electrolunch (07/04/2026)",
+    },
   ],
   downloads: {
     pressKitPdf: "https://drive.google.com/drive/folders/1hBNHAowXAhwakbR0eZweSXjTt4NhztuP?usp=sharing",
     mediaFolder: "https://drive.google.com/drive/folders/1hBNHAowXAhwakbR0eZweSXjTt4NhztuP?usp=sharing",
   },
-};
+} as const;
