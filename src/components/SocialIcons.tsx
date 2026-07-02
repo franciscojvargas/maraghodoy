@@ -1,6 +1,5 @@
 "use client";
 
-const size = 24;
 const className = "w-6 h-6 shrink-0";
 
 export function IconSoundCloud({ className: cn }: { className?: string }) {

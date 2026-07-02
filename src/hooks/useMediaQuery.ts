@@ -1,18 +1,19 @@
 "use client";
 
-import { useState, useLayoutEffect } from "react";
+import { useSyncExternalStore } from "react";
 
-const MOBILE_BREAKPOINT = 768;
+const MOBILE_QUERY = "(max-width: 767px)";
+
+function subscribe(callback: () => void) {
+  const mql = window.matchMedia(MOBILE_QUERY);
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+}
+
+function getSnapshot() {
+  return window.matchMedia(MOBILE_QUERY).matches;
+}
 
 export function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useLayoutEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  return isMobile;
+  return useSyncExternalStore(subscribe, getSnapshot, () => false);
 }
