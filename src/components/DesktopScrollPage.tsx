@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 import { usePresentationContent } from "@/hooks/usePresentationContent";
 import PrincipalContent from "@/components/PrincipalContent";
 
-const MediaSectionDesktop = dynamic(() => import("@/components/MediaSectionDesktop"), { ssr: true });
-const TechnicalRider = dynamic(() => import("@/components/TechnicalRider"), { ssr: true });
-const ContactForm = dynamic(() => import("@/components/ContactForm"), { ssr: true });
+const MediaSection = dynamic(() => import("@/components/MediaSection"), { ssr: true });
+const RiderSection = dynamic(() => import("@/components/RiderSection"), { ssr: true });
+const ContactSection = dynamic(() => import("@/components/ContactSection"), { ssr: true });
 const Footer = dynamic(() => import("@/components/Footer"), { ssr: true });
 
 const heroEase = [0.22, 1, 0.36, 1] as const;
@@ -79,15 +79,15 @@ export default function DesktopScrollPage() {
       </section>
 
       <section id="media" className="pt-16">
-        <MediaSectionDesktop />
+        <MediaSection />
       </section>
 
       <section id="rider" className="pt-16">
-        <TechnicalRider />
+        <RiderSection />
       </section>
 
       <section id="contacto" className="pt-16">
-        <ContactForm />
+        <ContactSection />
       </section>
 
       <footer id="footer" className="pt-4">

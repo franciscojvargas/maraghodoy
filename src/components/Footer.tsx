@@ -1,6 +1,6 @@
 "use client";
 
-import { siteConfig } from "@/lib/site";
+import { siteConfig } from "@/content/site";
 import { FadeIn } from "./AnimatedSection";
 import { IconSoundCloud, IconInstagram, IconYouTube } from "./SocialIcons";
 

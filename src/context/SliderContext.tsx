@@ -21,11 +21,8 @@ export function SliderProvider({ children }: { children: React.ReactNode }) {
   const [currentSection, setCurrentSection] = useState<MobileSection>("presentacion");
 
   const goToSlide = useCallback((index: number) => {
-    setCurrentIndex((i) => {
-      const target = Math.max(0, index);
-      if (totalSlides <= 0) return target;
-      return Math.min(target, totalSlides - 1);
-    });
+    const target = Math.max(0, index);
+    setCurrentIndex(totalSlides > 0 ? Math.min(target, totalSlides - 1) : target);
   }, [totalSlides]);
 
   return (

@@ -6,9 +6,9 @@ import Image from "next/image";
 const textLogoClass = "text-white font-bold text-base md:text-lg tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] whitespace-nowrap";
 
 const venues: { name: string; textLabel: string; logo: string | null }[] = [
-  { name: "Paris15", textLabel: "Paris15", logo: "/images/venues/paris15.png" },
+  { name: "Paris15", textLabel: "Paris15", logo: "/images/venues/paris15.webp" },
   { name: "Basshaus", textLabel: "BASSHAUS", logo: null },
-  { name: "Pandora", textLabel: "Pandora", logo: "/images/venues/pandora.png" },
+  { name: "Pandora", textLabel: "Pandora", logo: "/images/venues/pandora.webp" },
 ];
 
 function VenueItem({

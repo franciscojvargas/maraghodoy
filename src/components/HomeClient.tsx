@@ -3,22 +3,23 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { usePresentationContent } from "@/hooks/usePresentationContent";
-import { useIsMobile } from "@/hooks/useMediaQuery";
 import { useSlider } from "@/context/SliderContext";
-import { principalImages } from "@/lib/site";
+import { principalImages } from "@/content/site";
 import VerticalSlider from "@/components/VerticalSlider";
 import HeroSlide from "@/components/HeroSlide";
 import ImageSlide from "@/components/ImageSlide";
 import VenueLogos from "@/components/VenueLogos";
 import SectionLinksSlide from "@/components/SectionLinksSlide";
+import MobileSectionShell from "@/components/MobileSectionShell";
 
 const COSMOS_LOGO_BLOCK_INDEX = 2;
+const VENUE_LOGOS_BLOCK_INDEX = 3;
 
 const cosmosLogoAbove = (
   <div className="flex justify-center mt-8">
     <span className="relative block h-36 w-56 md:h-40 md:w-72">
       <Image
-        src="/images/venues/cosmos.png"
+        src="/images/venues/cosmos.webp"
         alt="Sala Cosmos"
         fill
         className="object-contain object-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
@@ -33,9 +34,9 @@ const DesktopScrollPage = dynamic(
   { ssr: true }
 );
 
-const MediaSectionView = dynamic(() => import("@/components/MediaSectionView"), { ssr: false });
-const RiderSectionView = dynamic(() => import("@/components/RiderSectionView"), { ssr: false });
-const ContactSectionView = dynamic(() => import("@/components/ContactSectionView"), { ssr: false });
+const MediaSection = dynamic(() => import("@/components/MediaSection"), { ssr: false });
+const RiderSection = dynamic(() => import("@/components/RiderSection"), { ssr: false });
+const ContactSection = dynamic(() => import("@/components/ContactSection"), { ssr: false });
 
 function MobileContent() {
   const { blocks } = usePresentationContent();
@@ -51,7 +52,11 @@ function MobileContent() {
             src={principalImages[i] ?? principalImages[0]!}
             alt="Mara Ghodoy"
             extraAbove={
-              i === COSMOS_LOGO_BLOCK_INDEX ? cosmosLogoAbove : i === 3 ? <VenueLogos /> : undefined
+              i === COSMOS_LOGO_BLOCK_INDEX
+                ? cosmosLogoAbove
+                : i === VENUE_LOGOS_BLOCK_INDEX
+                  ? <VenueLogos />
+                  : undefined
             }
           >
             {text}
@@ -61,18 +66,25 @@ function MobileContent() {
       </VerticalSlider>
     );
   }
-  if (currentSection === "media") return <MediaSectionView />;
-  if (currentSection === "rider") return <RiderSectionView />;
-  if (currentSection === "contacto") return <ContactSectionView />;
-  return null;
+
+  const sections = {
+    media: <MediaSection />,
+    rider: <RiderSection />,
+    contacto: <ContactSection />,
+  } as const;
+
+  return <MobileSectionShell>{sections[currentSection]}</MobileSectionShell>;
 }
 
-export default function Home() {
-  const isMobile = useIsMobile();
-
-  if (isMobile) {
-    return <MobileContent />;
-  }
-
-  return <DesktopScrollPage />;
+export default function HomeClient() {
+  return (
+    <>
+      <div className="md:hidden max-md:h-full">
+        <MobileContent />
+      </div>
+      <div className="hidden md:block">
+        <DesktopScrollPage />
+      </div>
+    </>
+  );
 }

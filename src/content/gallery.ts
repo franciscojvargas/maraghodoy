@@ -21,6 +21,7 @@ const MIXED_ORDER = [
   "gallery-13.webp",
   "gallery-16.webp",
   "gallery-19.webp",
+  "gallery-1.webp",
   "gallery-20.webp",
 ] as const;
 
