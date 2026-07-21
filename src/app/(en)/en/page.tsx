@@ -4,7 +4,7 @@ import HomeClient from "@/components/HomeClient";
 export const metadata: Metadata = {
   alternates: {
     canonical: "/en",
-    languages: { es: "/", en: "/en" },
+    languages: { es: "/", en: "/en", "x-default": "/" },
   },
 };
 

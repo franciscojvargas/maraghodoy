@@ -1,9 +1,13 @@
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { chromium } from "playwright-core";
 
 const PORT = 4173;
 const BASE = `http://localhost:${PORT}`;
-const CHROME = process.env.CHROME_PATH ?? "/usr/bin/google-chrome";
+const CHROME =
+  process.env.CHROME_PATH ??
+  (process.platform === "win32"
+    ? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    : "/usr/bin/google-chrome");
 
 let failures = 0;
 function check(name, ok, detail = "") {
@@ -11,7 +15,10 @@ function check(name, ok, detail = "") {
   if (!ok) failures++;
 }
 
-const server = spawn("npx", ["serve", "out", "-l", String(PORT)], { stdio: "ignore" });
+const server = spawn("npx", ["serve", "out", "-l", String(PORT)], {
+  stdio: "ignore",
+  shell: process.platform === "win32",
+});
 await new Promise((resolve, reject) => {
   const started = Date.now();
   const poll = async () => {
@@ -36,8 +43,13 @@ try {
   check("hreflang presente", rawEs.includes('hrefLang="en"'));
   check("JSON-LD presente", rawEs.includes('"@type":"Person"'));
   check("robots.txt", (await fetch(`${BASE}/robots.txt`)).ok);
-  check("sitemap.xml", (await fetch(`${BASE}/sitemap.xml`)).ok);
+  const sitemapXml = await (await fetch(`${BASE}/sitemap.xml`)).text();
+  check("sitemap.xml con hreflang", sitemapXml.includes('hreflang="en"'));
   check("og.jpg", (await fetch(`${BASE}/images/og.jpg`)).ok);
+  check("hreflang x-default", rawEs.includes('hrefLang="x-default"'));
+  check("manifest.webmanifest", (await fetch(`${BASE}/manifest.webmanifest`)).ok);
+  check("favicon 512", (await fetch(`${BASE}/icon.png`)).ok);
+  check("apple-touch-icon", (await fetch(`${BASE}/apple-icon.png`)).ok);
 
   const browser = await chromium.launch({ executablePath: CHROME, headless: true });
 
@@ -96,7 +108,11 @@ try {
   await browser.close();
   check("sin errores de página", pageErrors.length === 0, pageErrors.join("; "));
 } finally {
-  server.kill();
+  if (process.platform === "win32") {
+    spawnSync("taskkill", ["/pid", String(server.pid), "/f", "/t"], { stdio: "ignore" });
+  } else {
+    server.kill();
+  }
 }
 
 console.log(failures === 0 ? "\nSmoke OK" : `\n${failures} fallos`);

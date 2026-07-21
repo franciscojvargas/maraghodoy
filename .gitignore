@@ -1,16 +1,13 @@
-# Dependencias y build (raíz del proyecto Next.js)
 node_modules/
 .next/
 out/
 build/
 .turbo/
 
-# Variables de entorno
 .env
 .env.*
 !.env.example
 
-# Sistema y logs
 .DS_Store
 *.log
 *.tsbuildinfo

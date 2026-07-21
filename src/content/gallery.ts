@@ -25,9 +25,9 @@ const MIXED_ORDER = [
   "gallery-20.webp",
 ] as const;
 
-export const galleryImages = MIXED_ORDER.map((file) => ({
+export const galleryImages = MIXED_ORDER.map((file, i) => ({
   src: `${GALLERY_BASE}/${file}`,
-  alt: "Mara Ghodoy",
+  alt: `Mara Ghodoy — press photo ${i + 1}`,
 })) as readonly { src: string; alt: string }[];
 
 export const INITIAL_GALLERY_COUNT = 6;
