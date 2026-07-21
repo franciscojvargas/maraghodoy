@@ -20,9 +20,10 @@ export function YouTubeFacade({ id, title }: { id: string; title: string }) {
     return (
       <iframe
         title={title}
-        src={`https://www.youtube.com/embed/${id}?autoplay=1`}
+        src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1`}
         className="w-full h-full"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
       />
     );
@@ -63,6 +64,7 @@ export function SoundCloudFacade({ url, title }: { url: string; title: string })
         width="100%"
         height="166"
         allow="autoplay"
+        referrerPolicy="strict-origin-when-cross-origin"
         src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&inverse=false&auto_play=true&show_user=true`}
         className="border-0"
       />

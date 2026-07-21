@@ -8,9 +8,11 @@ export const principalImages = [
 
 export const siteConfig = {
   name: "Mara Ghodoy",
-  title: "Mara Ghodoy | DJ & Producer",
-  description:
-    "Official press kit of DJ Mara Ghodoy. Hardgroove & hypnotic techno. Music, videos, press photos and booking contact. Resident at Sala Cosmos, Sevilla.",
+  title: "Mara Ghodoy | DJ & Producer — Hardgroove & Hypnotic Techno",
+  description: {
+    es: "Press kit oficial de Mara Ghodoy, DJ y productora de techno (hardgroove e hypnotic techno). Sesiones, vídeos, fotos de prensa, technical rider y contacto de booking. Residente en Cosmos Club, Sevilla.",
+    en: "Official press kit of DJ and producer Mara Ghodoy. Hardgroove & hypnotic techno. Music, videos, press photos, technical rider and booking contact. Resident at Cosmos Club, Seville.",
+  },
   url: "https://maraghodoy.com",
   email: "booking@maraghodoy.com",
   socials: {

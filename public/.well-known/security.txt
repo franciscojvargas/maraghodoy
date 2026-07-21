@@ -1,0 +1,4 @@
+Contact: mailto:booking@maraghodoy.com
+Expires: 2027-07-21T00:00:00.000Z
+Preferred-Languages: es, en
+Canonical: https://maraghodoy.com/.well-known/security.txt
