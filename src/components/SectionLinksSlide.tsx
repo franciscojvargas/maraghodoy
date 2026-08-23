@@ -6,7 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { navLinks } from "@/content";
 import type { MobileSection } from "@/context/SliderContext";
 
-const sectionsToShow: MobileSection[] = ["media", "rider", "contacto"];
+const sectionsToShow: MobileSection[] = ["eventos", "media", "rider", "contacto"];
 const BACKGROUND_IMAGE = "/images/cabina-vermas.webp";
 
 const buttonClass =

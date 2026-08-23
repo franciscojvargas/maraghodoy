@@ -11,6 +11,7 @@ import { IconSoundCloud, IconYouTube } from "./SocialIcons";
 import { ImageLightbox } from "./ImageLightbox";
 import { PdfIcon, DownloadArrowIcon } from "./DownloadIcons";
 import { YouTubeFacade, SoundCloudFacade } from "./EmbedFacades";
+import SectionJump from "./SectionJump";
 
 function GalleryThumb({
   src,
@@ -190,6 +191,8 @@ export default function MediaSection() {
           </div>
         </AppleReveal>
       </div>
+
+      <SectionJump />
     </section>
   );
 }

@@ -1,6 +1,6 @@
 # Mara Ghodoy — Press Kit
 
-EPK (Electronic Press Kit) en una sola página: presentación, galería, vídeos, SoundCloud, technical rider y contacto.
+EPK (Electronic Press Kit): presentación, eventos, galería, vídeos, SoundCloud, technical rider y contacto.
 
 <p align="center">
   <a href="https://www.maraghodoy.com/">
@@ -36,12 +36,14 @@ maraghodoy/
 ├── next.config.mjs
 ├── postcss.config.mjs
 ├── tsconfig.json
+├── carteles/                 # Carteles originales de eventos (fuente, no se publica)
 ├── scripts/
-│   └── optimize-images.mjs   # Redimensiona/recomprime public/images
+│   ├── optimize-images.mjs   # Redimensiona/recomprime public/images (salta events/)
+│   └── prepare-posters.mjs   # carteles/ -> public/images/events (miniatura + completo)
 ├── public/
 │   ├── _headers              # Cache headers para Cloudflare Pages
 │   ├── _redirects            # Redirects para Cloudflare Pages
-│   └── images/               # Imágenes optimizadas (hero, galería, press, venues)
+│   └── images/               # Imágenes optimizadas (hero, galería, press, venues, events)
 ├── src/
 │   ├── app/
 │   │   ├── (es)/             # Ruta / — prerenderizada en español (html lang="es")
@@ -72,9 +74,9 @@ maraghodoy/
 
 ## Decisiones técnicas
 
-- **Responsive:** breakpoint único a **768px**. Móvil: slider vertical (una sección por pantalla). Desktop: página de scroll con secciones apiladas y animaciones. Las secciones Media/Rider/Contacto son **un único componente** compartido entre ambos modos; solo cambia el contenedor. Ambos árboles van en el HTML y la media query decide cuál se ve: el primer paint ya es correcto en cada dispositivo (sin flash) y los assets son los mismos ficheros, así que no hay descarga doble.
+- **Responsive:** breakpoint de layout a **768px**; el header pasa a menú de hamburguesa por debajo de **850px** (`--breakpoint-nav`). Móvil: slider vertical (una sección por pantalla). Desktop: página de scroll con secciones apiladas y animaciones. Las secciones Media/Rider/Contacto son **un único componente** compartido entre ambos modos; solo cambia el contenedor. Ambos árboles van en el HTML y la media query decide cuál se ve: el primer paint ya es correcto en cada dispositivo (sin flash) y los assets son los mismos ficheros, así que no hay descarga doble.
 - **i18n:** sin librería externa. Locales `es.ts` / `en.ts` con las mismas claves; `LanguageContext` con `t` tipado. Dos rutas estáticas indexables: `/` (español) y `/en` (inglés), con `hreflang` y canonical propios. En `/`, el idioma se detecta de `localStorage` o `navigator.language`; al cambiarlo se persiste y la URL se sincroniza (`history.replaceState`).
-- **Navegación:** en desktop, anclas `#presentacion`, `#media`, `#rider`, `#contacto`. En móvil, slider + nav sincronizada vía `SliderContext`. Los redirects de rutas sin hash viven en `public/_redirects` (con `output: "export"`, Next ignora `redirects()`/`headers()` del config).
+- **Navegación:** en desktop, anclas `#presentacion`, `#eventos`, `#media`, `#rider`, `#contacto`; `/eventos` y `/en/events` son rutas propias. `useSectionNav` centraliza los tres casos de salto (home móvil, home desktop, ruta propia). En móvil, slider + nav sincronizada vía `SliderContext`. Los redirects de rutas sin hash viven en `public/_redirects` (con `output: "export"`, Next ignora `redirects()`/`headers()` del config).
 - **Galería:** lista en `content/gallery.ts`; 6 imágenes iniciales + "Mostrar más". Lightbox con portal, cerrar/descargar, navegación por teclado, swipe táctil y preload de las imágenes adyacentes.
 - **Scroll lock:** hook único `useLockBodyScroll` con contador de bloqueos (menú, lightbox, slider y secciones móviles comparten la lógica sin pisarse).
 - **Rendimiento:** imágenes preoptimizadas con `scripts/optimize-images.mjs` (máx 1600px, hero 2400px, webp q80; los logos de salas van en webp de 600px). Los embeds de YouTube/SoundCloud son facades (`EmbedFacades.tsx`): ni un byte de terceros hasta pulsar play. Secciones pesadas con `next/dynamic`; `priority` en el hero. Export estático (`output: "export"`) para Cloudflare Pages; cache inmutable vía `public/_headers`.
@@ -94,6 +96,7 @@ maraghodoy/
 | `npm run lint`            | Ejecutar ESLint |
 | `npm run typecheck`       | Comprobar tipos con `tsc --noEmit` |
 | `npm run images:optimize` | Optimizar las imágenes de `public/images` (ejecutar al añadir fotos nuevas) |
+| `npm run posters:prepare` | Generar los derivados de `carteles/` en `public/images/events` |
 | `npm run test:e2e`        | Smoke test e2e contra `out/` con Chrome headless (requiere build previo) |
 
 ## Cómo lanzar en local (desarrollo)
@@ -122,3 +125,5 @@ Luego abrir la URL que indique `serve` (p. ej. `http://localhost:3000`). El cont
 - **Vídeos:** añadir `{ id, titleKey }` a `videos` en `src/content/site.ts` (con la clave de título en ambos locales).
 - **Sesiones SoundCloud:** añadir `{ url, title }` a `soundcloudSessions` en `src/content/site.ts`.
 - **Textos:** editar `src/content/locales/es.ts` y `en.ts` (deben mantener las mismas claves).
+- **Eventos:** añadir un bloque a `events` en `src/content/events.ts`. El orden del array da igual: la lista se ordena sola de la fecha más reciente a la más antigua. El `lineup` es el resto del cartel sin Mara; se pinta en la ficha y va como `performer` en el JSON-LD, que es lo que asocia a cada artista con ella en Google.
+- **Carteles:** dejar el original en `carteles/` con el mismo nombre que el `poster` del evento y ejecutar `npm run posters:prepare`. Genera la miniatura 4:5 y el cartel completo del visor; es idempotente, sólo procesa lo que ha cambiado.
