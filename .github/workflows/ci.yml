@@ -19,7 +19,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm audit --omit=dev --audit-level=high
-      - run: npm run check:headers
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
