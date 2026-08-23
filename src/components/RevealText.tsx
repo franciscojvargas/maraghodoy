@@ -26,15 +26,13 @@ type Props = {
 export default function RevealText({ text, className }: Props) {
   const mounted = useMounted();
   const ref = useRef<HTMLDivElement>(null);
-  const [started, setStarted] = useState(false);
+  const [started, setStarted] = useState(
+    () => typeof IntersectionObserver === "undefined"
+  );
 
   useEffect(() => {
     const node = ref.current;
     if (!node || started) return;
-    if (typeof IntersectionObserver === "undefined") {
-      setStarted(true);
-      return;
-    }
 
     const observer = new IntersectionObserver(
       (entries) => {
