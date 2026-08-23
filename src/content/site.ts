@@ -35,3 +35,6 @@ export const siteConfig = {
     mediaFolder: "https://drive.google.com/drive/folders/1hBNHAowXAhwakbR0eZweSXjTt4NhztuP?usp=sharing",
   },
 } as const;
+
+/** Nodo canónico del artista. Los MusicEvent lo referencian en vez de duplicarlo. */
+export const PERSON_ID = `${siteConfig.url}/#person`;

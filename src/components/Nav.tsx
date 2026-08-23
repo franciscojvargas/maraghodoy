@@ -13,6 +13,7 @@ import { navLinks } from "@/content";
 import { IconSoundCloud, IconInstagram, IconYouTube } from "./SocialIcons";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useSectionNav } from "@/hooks/useSectionNav";
 
 function getNavLabel(href: string, t: Record<NavLabelKey, string>) {
   const item = navLinks.find((l) => l.href === href);
@@ -50,8 +51,8 @@ function MenuButtonIcon({ open }: { open: boolean }) {
 export default function Nav() {
   const { lang, setLang, t } = useLanguage();
   const isMobile = useIsMobile();
-  const { goToSlide, currentIndex, setCurrentSection, currentSection } = useSlider();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const { goToSlide, currentIndex, currentSection, menuOpen, setMenuOpen } = useSlider();
+  const { goToSection, onHome, homeHref } = useSectionNav();
   const mounted = useMounted();
   const [scrolled, setScrolled] = useState(false);
 
@@ -62,21 +63,21 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isMobile]);
 
-  useLockBodyScroll(mobileOpen);
+  useLockBodyScroll(menuOpen);
 
   const menuRef = useRef<HTMLDivElement>(null);
-  useFocusTrap(menuRef, mobileOpen);
+  useFocusTrap(menuRef, menuOpen);
 
   useEffect(() => {
-    if (!mobileOpen) return;
+    if (!menuOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileOpen(false);
+      if (e.key === "Escape") setMenuOpen(false);
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [mobileOpen]);
+  }, [menuOpen, setMenuOpen]);
 
-  const closeMenu = () => setMobileOpen(false);
+  const closeMenu = () => setMenuOpen(false);
 
   const headerScrolled = isMobile
     ? currentSection !== "presentacion" || currentIndex > 0
@@ -84,7 +85,7 @@ export default function Nav() {
 
   const mobileMenu = (
     <AnimatePresence>
-      {mobileOpen && mounted && (
+      {menuOpen && mounted && (
         <>
           <motion.div
             initial={{ opacity: 0 }}
@@ -114,7 +115,7 @@ export default function Nav() {
                   key={href}
                   type="button"
                   onClick={() => {
-                    setCurrentSection(section);
+                    goToSection(section);
                     closeMenu();
                   }}
                   aria-current={currentSection === section ? "page" : undefined}
@@ -214,7 +215,7 @@ export default function Nav() {
             <button
               type="button"
               onClick={() => {
-                setCurrentSection("presentacion");
+                goToSection("presentacion");
                 goToSlide(0);
               }}
               className="text-lg font-semibold text-white hover:opacity-80 transition text-left min-h-[44px] min-w-[44px] flex items-center"
@@ -234,13 +235,13 @@ export default function Nav() {
             </a>
           )}
 
-          <div className="hidden sm:flex items-center gap-1 md:gap-6">
+          <div className="hidden nav:flex items-center gap-1 md:gap-4">
             {navLinks.map(({ href, section }) =>
               isMobile ? (
                 <button
                   key={href}
                   type="button"
-                  onClick={() => setCurrentSection(section)}
+                  onClick={() => goToSection(section)}
                   aria-current={currentSection === section ? "page" : undefined}
                   className={`text-sm font-medium transition px-3 py-2 rounded-lg hover:text-white min-h-[44px] ${
                     currentSection === section ? "text-white" : "text-neutral-400"
@@ -251,7 +252,7 @@ export default function Nav() {
               ) : (
                 <a
                   key={href}
-                  href={`#${section}`}
+                  href={onHome ? `#${section}` : `${homeHref}#${section}`}
                   className="text-sm font-medium transition px-3 py-2 rounded-lg text-neutral-400 hover:text-white"
                 >
                   {getNavLabel(href, t)}
@@ -296,12 +297,12 @@ export default function Nav() {
 
           <button
             type="button"
-            onClick={() => setMobileOpen((o) => !o)}
-            className="sm:hidden flex items-center justify-center w-10 h-10 rounded-lg text-white hover:bg-white/10 transition min-h-[44px] min-w-[44px]"
-            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-            aria-expanded={mobileOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="nav:hidden flex items-center justify-center w-10 h-10 rounded-lg text-white hover:bg-white/10 transition min-h-[44px] min-w-[44px]"
+            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={menuOpen}
           >
-            <MenuButtonIcon open={mobileOpen} />
+            <MenuButtonIcon open={menuOpen} />
           </button>
         </nav>
       </motion.header>

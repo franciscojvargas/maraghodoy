@@ -5,6 +5,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import { StaggerChildren, StaggerItem } from "./AnimatedSection";
 import { IconInstagram } from "./SocialIcons";
+import SectionJump from "./SectionJump";
 
 const EmailIcon = () => (
   <svg className="w-8 h-8 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
@@ -59,6 +60,8 @@ export default function ContactSection() {
           </div>
         </StaggerItem>
       </StaggerChildren>
+
+      <SectionJump />
     </section>
   );
 }

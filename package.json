@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "images:optimize": "node scripts/optimize-images.mjs",
     "check:headers": "node scripts/check-headers-sync.mjs",
+    "posters:prepare": "node scripts/prepare-posters.mjs",
     "test:e2e": "node e2e/smoke.mjs"
   },
   "dependencies": {

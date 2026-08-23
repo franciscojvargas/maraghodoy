@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { usePresentationContent } from "@/hooks/usePresentationContent";
 import { principalImages } from "@/content/site";
 import ImageTextSection from "./ImageTextSection";
 import VenueLogos from "./VenueLogos";
+import ResidencyLogos from "./ResidencyLogos";
 
-const cosmosLogoSectionIndex = 2;
+const RESIDENCY_BLOCK_INDEX = 2;
+const VENUE_LOGOS_BLOCK_INDEX = 3;
 
 export default function PrincipalContent() {
   const { blocks } = usePresentationContent();
@@ -19,19 +20,9 @@ export default function PrincipalContent() {
           src={principalImages[i] ?? principalImages[0]!}
           alt="Mara Ghodoy"
           extraBelow={
-            i === cosmosLogoSectionIndex ? (
-              <div className="flex justify-center mt-8">
-                <span className="relative block h-36 w-56 md:h-40 md:w-72">
-                  <Image
-                    src="/images/venues/cosmos.webp"
-                    alt="Sala Cosmos"
-                    fill
-                    className="object-contain object-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
-                    sizes="(max-width: 768px) 224px, 288px"
-                  />
-                </span>
-              </div>
-            ) : i === 3 ? (
+            i === RESIDENCY_BLOCK_INDEX ? (
+              <ResidencyLogos />
+            ) : i === VENUE_LOGOS_BLOCK_INDEX ? (
               <VenueLogos />
             ) : undefined
           }
