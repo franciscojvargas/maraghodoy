@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { usePresentationContent } from "@/hooks/usePresentationContent";
 import PrincipalContent from "@/components/PrincipalContent";
 
+const EventsSection = dynamic(() => import("@/components/EventsSection"), { ssr: true });
 const MediaSection = dynamic(() => import("@/components/MediaSection"), { ssr: true });
 const RiderSection = dynamic(() => import("@/components/RiderSection"), { ssr: true });
 const ContactSection = dynamic(() => import("@/components/ContactSection"), { ssr: true });
@@ -76,6 +77,10 @@ export default function DesktopScrollPage() {
 
       <section id="principal" className="pt-16">
         <PrincipalContent />
+      </section>
+
+      <section id="eventos" className="pt-16">
+        <EventsSection variant="teaser" />
       </section>
 
       <section id="media" className="pt-16">

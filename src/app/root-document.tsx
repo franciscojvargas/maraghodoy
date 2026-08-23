@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import { siteConfig } from "@/content/site";
+import { siteConfig, PERSON_ID } from "@/content/site";
 import ClientLayout from "@/components/ClientLayout";
 import type { Lang } from "@/content";
 
@@ -51,15 +51,13 @@ export const baseViewport: Viewport = {
   colorScheme: "dark",
 };
 
-const personId = `${siteConfig.url}/#person`;
-
 function buildJsonLd(lang: Lang) {
   return {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Person",
-        "@id": personId,
+        "@id": PERSON_ID,
         name: siteConfig.name,
         url: siteConfig.url,
         image: `${siteConfig.url}/images/og.jpg`,
@@ -79,8 +77,8 @@ function buildJsonLd(lang: Lang) {
         url: siteConfig.url,
         name: siteConfig.name,
         inLanguage: lang,
-        about: { "@id": personId },
-        publisher: { "@id": personId },
+        about: { "@id": PERSON_ID },
+        publisher: { "@id": PERSON_ID },
       },
     ],
   };

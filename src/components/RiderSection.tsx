@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import { StaggerChildren, StaggerItem } from "./AnimatedSection";
+import SectionJump from "./SectionJump";
 
 const riderGroups = [
   { titleKey: "riderSetup", listKey: "riderSetupList" },
@@ -32,6 +33,8 @@ export default function RiderSection() {
           <p className="text-sm text-neutral-500 italic pt-4 text-justify">{t.riderNote}</p>
         </StaggerItem>
       </StaggerChildren>
+
+      <SectionJump />
     </section>
   );
 }

@@ -35,6 +35,8 @@ async function walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
+      // events/ ya lo comprime prepare-posters.mjs; repasarlo sólo degradaría.
+      if (entry.name === "events") continue;
       await walk(full);
     } else if (entry.name.endsWith(".webp")) {
       await optimizeWebp(full, entry.name === "hero.webp" ? 2400 : 1600);
