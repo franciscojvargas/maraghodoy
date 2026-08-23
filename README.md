@@ -32,8 +32,6 @@ maraghodoy/
 │   ├── optimize-images.mjs   # Redimensiona/recomprime public/images (salta events/)
 │   └── prepare-posters.mjs   # carteles/ -> public/images/events (miniatura + completo)
 ├── public/
-│   ├── _headers              # Cache headers para Cloudflare Pages
-│   ├── _redirects            # Redirects para Cloudflare Pages
 │   └── images/               # Imágenes optimizadas (hero, galería, press, venues, events)
 ├── src/
 │   ├── app/
@@ -67,10 +65,10 @@ maraghodoy/
 
 - **Responsive:** breakpoint de layout a **768px**; el header pasa a menú de hamburguesa por debajo de **850px** (`--breakpoint-nav`). Móvil: slider vertical (una sección por pantalla). Desktop: página de scroll con secciones apiladas y animaciones. Las secciones Media/Rider/Contacto son **un único componente** compartido entre ambos modos; solo cambia el contenedor. Ambos árboles van en el HTML y la media query decide cuál se ve: el primer paint ya es correcto en cada dispositivo (sin flash) y los assets son los mismos ficheros, así que no hay descarga doble.
 - **i18n:** sin librería externa. Locales `es.ts` / `en.ts` con las mismas claves; `LanguageContext` con `t` tipado. Dos rutas estáticas indexables: `/` (español) y `/en` (inglés), con `hreflang` y canonical propios. En `/`, el idioma se detecta de `localStorage` o `navigator.language`; al cambiarlo se persiste y la URL se sincroniza (`history.replaceState`).
-- **Navegación:** en desktop, anclas `#presentacion`, `#eventos`, `#media`, `#rider`, `#contacto`; `/eventos` y `/en/events` son rutas propias. `useSectionNav` centraliza los tres casos de salto (home móvil, home desktop, ruta propia). En móvil, slider + nav sincronizada vía `SliderContext`. Los redirects de rutas sin hash viven en `public/_redirects` (con `output: "export"`, Next ignora `redirects()`/`headers()` del config).
+- **Navegación:** en desktop, anclas `#presentacion`, `#eventos`, `#media`, `#rider`, `#contacto`; `/eventos` y `/en/events` son rutas propias. `useSectionNav` centraliza los tres casos de salto (home móvil, home desktop, ruta propia). En móvil, slider + nav sincronizada vía `SliderContext`. Los redirects de rutas sin hash viven en `vercel.json` (con `output: "export"`, Next ignora `redirects()`/`headers()` del config).
 - **Galería:** lista en `content/gallery.ts`; 6 imágenes iniciales + "Mostrar más". Lightbox con portal, cerrar/descargar, navegación por teclado, swipe táctil y preload de las imágenes adyacentes.
 - **Scroll lock:** hook único `useLockBodyScroll` con contador de bloqueos (menú, lightbox, slider y secciones móviles comparten la lógica sin pisarse).
-- **Rendimiento:** imágenes preoptimizadas con `scripts/optimize-images.mjs` (máx 1600px, hero 2400px, webp q80; los logos de salas van en webp de 600px). Los embeds de YouTube/SoundCloud son facades (`EmbedFacades.tsx`): ni un byte de terceros hasta pulsar play. Secciones pesadas con `next/dynamic`; `priority` en el hero. Export estático (`output: "export"`) para Cloudflare Pages; cache inmutable vía `public/_headers`.
+- **Rendimiento:** imágenes preoptimizadas con `scripts/optimize-images.mjs` (máx 1600px, hero 2400px, webp q80; los logos de salas van en webp de 600px). Los embeds de YouTube/SoundCloud son facades (`EmbedFacades.tsx`): ni un byte de terceros hasta pulsar play. Secciones pesadas con `next/dynamic`; `priority` en el hero. Export estático (`output: "export"`) desplegado en Vercel; cache inmutable vía cabeceras en `vercel.json`.
 - **Accesibilidad:** `MotionConfig reducedMotion="user"` respeta `prefers-reduced-motion`; focus trap (`useFocusTrap`) en menú móvil y lightbox; Escape cierra ambos; `aria-current` en la navegación móvil.
 - **SEO:** metadata OG + Twitter card (imagen dedicada 1200×630 en `public/images/og.jpg`, regenerable con el script de imágenes); JSON-LD (`schema.org/Person`); `hreflang`/canonical por ruta; `robots.txt` y `sitemap.xml` generados en build; 404 con branding (`src/app/not-found.tsx`).
 - **CI:** GitHub Actions (`.github/workflows/ci.yml`): `lint` + `typecheck` + `build` en cada push/PR.
@@ -87,7 +85,6 @@ maraghodoy/
 | `npm run lint`            | Ejecutar ESLint |
 | `npm run typecheck`       | Comprobar tipos con `tsc --noEmit` |
 | `npm run images:optimize` | Optimizar las imágenes de `public/images` (ejecutar al añadir fotos nuevas) |
-| `npm run check:headers`   | Verificar consistencia de configuración |
 | `npm run posters:prepare` | Generar los derivados de `carteles/` en `public/images/events` |
 | `npm run test:e2e`        | Smoke test e2e contra `out/` con Chrome headless (requiere build previo) |
 
