@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useCallback } from "react";
 
-export type MobileSection = "presentacion" | "media" | "rider" | "contacto";
+export type MobileSection = "presentacion" | "eventos" | "media" | "rider" | "contacto";
 
 type SliderContextType = {
   currentIndex: number;
@@ -11,6 +11,9 @@ type SliderContextType = {
   setTotalSlides: (n: number) => void;
   currentSection: MobileSection;
   setCurrentSection: (s: MobileSection) => void;
+  /** El cajón del header. Vive aquí para que el botón "Ver más" pueda abrirlo. */
+  menuOpen: boolean;
+  setMenuOpen: (open: boolean) => void;
 };
 
 const SliderContext = createContext<SliderContextType | null>(null);
@@ -19,6 +22,7 @@ export function SliderProvider({ children }: { children: React.ReactNode }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [totalSlides, setTotalSlides] = useState(0);
   const [currentSection, setCurrentSection] = useState<MobileSection>("presentacion");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const goToSlide = useCallback((index: number) => {
     const target = Math.max(0, index);
@@ -34,6 +38,8 @@ export function SliderProvider({ children }: { children: React.ReactNode }) {
         setTotalSlides,
         currentSection,
         setCurrentSection,
+        menuOpen,
+        setMenuOpen,
       }}
     >
       {children}

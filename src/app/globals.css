@@ -11,6 +11,12 @@
   --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
 }
 
+@theme {
+  /* Por debajo de esto el header pasa a menú de hamburguesa: con cinco enlaces
+     más el conmutador de idioma, la barra se queda sin aire antes de 850 px. */
+  --breakpoint-nav: 850px;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -19,4 +25,35 @@ body {
   background: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
+}
+
+/*
+ * Revelado palabra a palabra. Sólo opacidad, escalonada con animation-delay:
+ * la anima el compositor y no hay JS por fotograma. El texto está siempre en el
+ * DOM; sin el atributo data-reveal se ve completo.
+ */
+@keyframes reveal-word {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+[data-reveal="pending"] .reveal-word {
+  opacity: 0;
+}
+
+[data-reveal="run"] .reveal-word {
+  animation: reveal-word 200ms ease-out both;
+  /* 250 ms de margen para que el bloque termine de deslizarse antes de escribir. */
+  animation-delay: calc(250ms + var(--reveal-i, 0) * var(--reveal-step, 62ms));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] .reveal-word {
+    opacity: 1;
+    animation: none;
+  }
 }

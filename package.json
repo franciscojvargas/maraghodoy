@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "images:optimize": "node scripts/optimize-images.mjs",
+    "posters:prepare": "node scripts/prepare-posters.mjs",
     "test:e2e": "node e2e/smoke.mjs"
   },
   "dependencies": {

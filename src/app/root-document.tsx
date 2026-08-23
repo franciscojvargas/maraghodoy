@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { siteConfig } from "@/content/site";
+import { siteConfig, PERSON_ID } from "@/content/site";
 import ClientLayout from "@/components/ClientLayout";
 import type { Lang } from "@/content";
 
@@ -34,6 +34,7 @@ export const baseMetadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": PERSON_ID,
   name: siteConfig.name,
   url: siteConfig.url,
   image: `${siteConfig.url}/images/og.jpg`,

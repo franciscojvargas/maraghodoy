@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import RevealText from "./RevealText";
 
 type Props = {
   src: string;
@@ -25,12 +26,11 @@ export default function ImageSlide({ src, alt, children, extraAbove, extraBelow 
       </div>
       <div className="relative z-10 flex-1 flex flex-col items-center justify-end px-6 max-w-2xl mx-auto w-full text-center overflow-y-auto min-h-0 pb-10 pt-20">
         {extraAbove}
-        {typeof children === "string" && children.includes("\n") ? (
-          <div className="text-lg md:text-xl text-neutral-100 leading-relaxed drop-shadow-lg text-justify space-y-2">
-            {children.split("\n").map((line, i) => (
-              <p key={i}>{line}</p>
-            ))}
-          </div>
+        {typeof children === "string" ? (
+          <RevealText
+            text={children}
+            className="text-lg md:text-xl text-neutral-100 leading-relaxed drop-shadow-lg text-justify space-y-2"
+          />
         ) : (
           <p className="text-lg md:text-xl text-neutral-100 leading-relaxed drop-shadow-lg text-justify">
             {children}

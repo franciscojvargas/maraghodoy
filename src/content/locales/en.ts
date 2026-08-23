@@ -1,5 +1,6 @@
 export default {
   navPresentation: "Presentation",
+  navEvents: "Events",
   navMedia: "Media",
   navRider: "Technical Rider",
   navContact: "Contact",
@@ -11,7 +12,7 @@ export default {
   principalBlocks: [
     "Mara Ghodoy delivers a sound rooted in hardgroove and hypnotic techno, with a strong club-focused approach where rhythm, percussion and continuous groove shape her sets.",
     "With over five years of experience, she has built a solid artistic identity based on precise mixing, progressive tension and an evolved understanding of the dancefloor. Her performances are intense and dynamic, constantly evolving.",
-    "She is currently a resident at Cosmos Club (Seville), with a project conceived for the European and international club circuit.",
+    "She is currently a resident at Cosmos Club and Oscura Techno, with a project conceived for the European and international club circuit.",
     "She has performed in Spain in cities such as Madrid, Barcelona, Seville, Mérida, Málaga and Granada, playing venues and clubs like Cosmos Club, Paris15, Basshaus and Pandora, as well as appearing in Los Angeles (USA).",
     "Alongside her DJ career, she is working on her first original productions.\nReferences: Grace Dahl · DJ Dextro · Axel Karakasis.",
   ],
@@ -31,6 +32,13 @@ export default {
   riderFormat: "Format",
   riderFormatList: ["USB (Rekordbox)", "No laptop required"],
   riderNote: "This technical rider is flexible. Please contact in advance for any modifications.",
+  eventsTitle: "Events",
+  eventsSeeAll: "See all events",
+  eventsSeeLess: "Show less",
+  eventsEmpty: "Upcoming dates to be confirmed. Get in touch for booking.",
+  eventsMetaTitle: "Events | Mara Ghodoy",
+  eventsMetaDescription:
+    "Upcoming dates and past shows by DJ Mara Ghodoy: venues, clubs and festivals across Spain and beyond.",
   contactTitle: "Contact",
   contactSubline: "Booking & press",
   contactEmailButton: "Email",
