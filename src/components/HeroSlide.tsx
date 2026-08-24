@@ -34,11 +34,11 @@ export default function HeroSlide() {
         className="relative z-10 flex flex-col items-center pb-6"
         aria-hidden
       >
-        <span className="text-[10px] text-white/50 uppercase tracking-widest mb-1.5">
+        <span className="text-[10px] text-white/85 uppercase tracking-widest mb-1.5 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
           {t.heroSwipeHint}
         </span>
         <svg
-          className="w-6 h-6 text-white/50 animate-bounce"
+          className="w-6 h-6 text-white/85 animate-bounce drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

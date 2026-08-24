@@ -81,8 +81,6 @@ export default function MediaSection() {
             currentIndex={lightboxIndex}
             onClose={() => setLightboxIndex(null)}
             onSelectIndex={setLightboxIndex}
-            closeLabel={t.lightboxClose}
-            downloadLabel={t.lightboxDownload}
           />
         )}
         {hasMore && (

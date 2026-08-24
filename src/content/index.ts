@@ -13,4 +13,20 @@ export const navLinks: readonly { href: string; section: "presentacion" | "event
   { href: "/contacto", section: "contacto", labelKey: "navContact" },
 ];
 
+/** Cada ruta con su equivalente en el otro idioma. */
+const localizedRoutes: readonly Record<Lang, string>[] = [
+  { es: "/", en: "/en" },
+  { es: "/eventos", en: "/en/events" },
+];
+
+const normalize = (pathname: string) =>
+  pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+
+/** La misma página en el otro idioma; si la ruta no está mapeada, la home. */
+export function localizedPath(pathname: string, lang: Lang): string {
+  const current = normalize(pathname);
+  const route = localizedRoutes.find((r) => r.es === current || r.en === current);
+  return route ? route[lang] : localizedRoutes[0][lang];
+}
+
 export const translations = { es, en };

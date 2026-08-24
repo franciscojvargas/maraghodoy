@@ -10,7 +10,7 @@ import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { siteConfig } from "@/content/site";
 import type { NavLabelKey } from "@/content";
 import { navLinks } from "@/content";
-import { IconSoundCloud, IconInstagram, IconYouTube } from "./SocialIcons";
+import { IconSoundCloud, IconInstagram, IconYouTube, IconTikTok, IconResidentAdvisor } from "./SocialIcons";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useSectionNav } from "@/hooks/useSectionNav";
@@ -107,7 +107,7 @@ export default function Nav() {
             style={{ boxShadow: "-10px 0 40px rgba(0,0,0,0.5)" }}
             role="dialog"
             aria-modal="true"
-            aria-label="Menú"
+            aria-label={t.navMenu}
           >
             <div className="flex flex-col gap-0.5 pt-24 pb-8 px-6 overflow-y-auto">
               {navLinks.map(({ href, section }) => (
@@ -156,6 +156,26 @@ export default function Nav() {
               >
                 <IconYouTube className="w-6 h-6" />
               </a>
+              <a
+                href={siteConfig.socials.tiktok}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition"
+                aria-label="TikTok"
+              >
+                <IconTikTok className="w-6 h-6" />
+              </a>
+              {siteConfig.socials.residentAdvisor && (
+                <a
+                  href={siteConfig.socials.residentAdvisor}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition"
+                  aria-label="Resident Advisor"
+                >
+                  <IconResidentAdvisor className="w-6 h-6" />
+                </a>
+              )}
             </div>
 
             <div className="mt-6 px-6">
@@ -224,8 +244,10 @@ export default function Nav() {
             </button>
           ) : (
             <a
-              href="#presentacion"
+              // Fuera de la home no hay ancla a la que bajar: ahí el logo navega.
+              href={onHome ? "#presentacion" : homeHref}
               onClick={(e) => {
+                if (!onHome) return;
                 e.preventDefault();
                 document.getElementById("presentacion")?.scrollIntoView({ behavior: "smooth" });
               }}
@@ -299,7 +321,7 @@ export default function Nav() {
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
             className="nav:hidden flex items-center justify-center w-10 h-10 rounded-lg text-white hover:bg-white/10 transition min-h-[44px] min-w-[44px]"
-            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-label={menuOpen ? t.navMenuClose : t.navMenuOpen}
             aria-expanded={menuOpen}
           >
             <MenuButtonIcon open={menuOpen} />

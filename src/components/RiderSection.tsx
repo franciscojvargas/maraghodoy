@@ -1,38 +1,66 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { StaggerChildren, StaggerItem } from "./AnimatedSection";
+import { AppleReveal } from "./AnimatedSection";
 import SectionJump from "./SectionJump";
 
-const riderGroups = [
-  { titleKey: "riderSetup", listKey: "riderSetupList" },
-  { titleKey: "riderReqs", listKey: "riderReqsList" },
-  { titleKey: "riderFormat", listKey: "riderFormatList" },
-] as const;
+/**
+ * Un rider es una hoja de especificaciones, así que se pinta como tal: panel con
+ * borde, grupos numerados y guiones finos en vez de topos. En escritorio va a
+ * dos columnas 5/7 —setup y formato pesan cinco líneas, los requisitos siete—
+ * para que ninguna quede colgando; por debajo de `md` se apilan.
+ */
+function Group({
+  index,
+  title,
+  items,
+}: {
+  index: string;
+  title: string;
+  items: readonly string[];
+}) {
+  return (
+    <div>
+      <h3 className="flex items-baseline gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white">
+        <span className="text-[10px] tabular-nums text-neutral-500">{index}</span>
+        {title}
+      </h3>
+      <ul className="mt-4 space-y-2.5">
+        {items.map((item) => (
+          <li key={item} className="flex gap-3 text-[15px] leading-snug text-neutral-300">
+            <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-white/30" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function RiderSection() {
   const { t } = useLanguage();
 
   return (
-    <section className="px-6 py-8 md:py-20 max-w-2xl mx-auto">
-      <StaggerChildren className="space-y-8 text-neutral-300" staggerDelay={0.1}>
-        <StaggerItem>
-          <h2 className="text-2xl font-semibold mb-2 text-white">{t.riderTitle}</h2>
-        </StaggerItem>
-        {riderGroups.map(({ titleKey, listKey }) => (
-          <StaggerItem key={titleKey}>
-            <h3 className="text-white font-medium mb-2">{t[titleKey]}</h3>
-            <ul className="list-disc list-inside space-y-1 text-justify">
-              {t[listKey].map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </StaggerItem>
-        ))}
-        <StaggerItem>
-          <p className="text-sm text-neutral-500 italic pt-4 text-justify">{t.riderNote}</p>
-        </StaggerItem>
-      </StaggerChildren>
+    <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6 md:py-16">
+      <AppleReveal delay={0}>
+        <h2 className="mb-6 text-2xl font-semibold text-white">{t.riderTitle}</h2>
+
+        <div className="overflow-hidden rounded-2xl border border-white/15 bg-white/[0.03]">
+          <div className="grid divide-y divide-white/10 md:grid-cols-[5fr_7fr] md:divide-x md:divide-y-0">
+            <div className="space-y-8 p-6 sm:p-8">
+              <Group index="01" title={t.riderSetup} items={t.riderSetupList} />
+              <Group index="02" title={t.riderFormat} items={t.riderFormatList} />
+            </div>
+            <div className="p-6 sm:p-8">
+              <Group index="03" title={t.riderReqs} items={t.riderReqsList} />
+            </div>
+          </div>
+
+          <p className="border-t border-white/10 bg-white/[0.02] px-6 py-4 text-sm text-neutral-400 sm:px-8">
+            {t.riderNote}
+          </p>
+        </div>
+      </AppleReveal>
 
       <SectionJump />
     </section>

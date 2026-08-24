@@ -29,10 +29,10 @@ export default function ImageSlide({ src, alt, children, extraAbove, extraBelow 
         {typeof children === "string" ? (
           <RevealText
             text={children}
-            className="text-lg md:text-xl text-neutral-100 leading-relaxed drop-shadow-lg text-justify space-y-2"
+            className="text-lg md:text-xl text-neutral-100 leading-relaxed drop-shadow-lg space-y-2"
           />
         ) : (
-          <p className="text-lg md:text-xl text-neutral-100 leading-relaxed drop-shadow-lg text-justify">
+          <p className="text-lg md:text-xl text-neutral-100 leading-relaxed drop-shadow-lg">
             {children}
           </p>
         )}

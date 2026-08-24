@@ -72,6 +72,8 @@ try {
   check("sitemap incluye eventos", rawSitemap.includes("/eventos") && rawSitemap.includes("/en/events"));
   // Desde una ruta propia el nav debe volver a la home, no apuntar a anclas inexistentes.
   check("/eventos: nav enlaza a la home", rawEventos.includes('href="/#media"'));
+  check("/eventos: el logo del header lleva a la home", rawEventos.includes('href="/"'));
+  check("/en/events: el logo del header lleva a /en", rawEventsEn.includes('href="/en"'));
 
   // Las aserciones de listado valen igual con la lista vacía que poblada.
   const eventDates = [...rawEventos.matchAll(/dateTime="([^"]+)"/g)].map((m) => Date.parse(m[1]));
@@ -79,6 +81,9 @@ try {
     check("/eventos: estado vacío", rawEventos.includes("por confirmar"));
   } else {
     check("/eventos: JSON-LD MusicEvent", rawEventos.includes('"@type":"MusicEvent"'));
+    check("/eventos: miga de pan", rawEventos.includes('"@type":"BreadcrumbList"'));
+
+    // Sin partir por pasado/futuro: el HTML no puede depender del día del build.
     const descending = eventDates.every((d, i) => i === 0 || d <= eventDates[i - 1]);
     check(
       "/eventos: orden estricto de fecha más reciente a más antigua",
@@ -127,6 +132,13 @@ try {
     `${revelado.opacas}/${revelado.total} palabras en ${revelado.bloques} bloques`
   );
 
+  await dp.locator("#rider").scrollIntoViewIfNeeded();
+  await dp.waitForTimeout(400);
+  const riderItems = await dp.locator("#rider li").count();
+  const riderCols = await dp.locator("#rider .rounded-2xl > div > div").count();
+  check("rider: los tres grupos con sus 12 líneas", riderItems === 12, `${riderItems} líneas`);
+  check("rider: dos columnas en escritorio", riderCols === 2, `${riderCols} columnas`);
+
   await dp.locator('#media').scrollIntoViewIfNeeded();
   await dp.waitForTimeout(1000);
   const ytFacade = dp.locator('button[aria-label^="Play: Mara Ghodoy"]').first();
@@ -148,6 +160,18 @@ try {
 
   await dp.goto(`${BASE}/eventos`, { waitUntil: "networkidle" });
   await dp.waitForTimeout(600);
+
+  // A la misma página en el otro idioma, no a la home.
+  await dp.locator("button", { hasText: "EN" }).first().click();
+  await dp.waitForTimeout(1200);
+  check(
+    "/eventos: el toggle EN lleva a /en/events",
+    (await dp.evaluate(() => location.pathname)) === "/en/events",
+    await dp.evaluate(() => location.pathname)
+  );
+  await dp.goto(`${BASE}/eventos`, { waitUntil: "networkidle" });
+  await dp.waitForTimeout(600);
+
   const posterThumbs = dp.locator('button:has(img[src*="/images/events/"])');
   const posterCount = await posterThumbs.count();
   check("/eventos: carteles renderizados", posterCount > 0, `${posterCount} carteles`);
@@ -162,6 +186,16 @@ try {
       "/eventos: el visor carga el cartel entero, no la miniatura",
       !!fullSrc && fullSrc.includes("/images/events/") && !fullSrc.includes("-thumb"),
       fullSrc ?? "sin src"
+    );
+    await dp.keyboard.press("Escape");
+    await dp.waitForTimeout(300);
+
+    // Se pulsa el nombre de la sala, que cae fuera del botón del cartel.
+    await dp.locator("#eventos li p, main li p").first().click();
+    await dp.waitForTimeout(500);
+    check(
+      "/eventos: la fila entera abre el visor",
+      await dp.locator('[role="dialog"][aria-modal="true"]').first().isVisible()
     );
     await dp.keyboard.press("Escape");
     await dp.waitForTimeout(300);
@@ -191,6 +225,26 @@ try {
   await mp.locator('[role="dialog"] button', { hasText: /Eventos|Events/ }).click();
   await mp.waitForTimeout(800);
   check("móvil: sección Eventos abre", await mp.locator("h2", { hasText: /Eventos|Events/ }).first().isVisible());
+
+  // La sección vive en la URL: enlaces profundos y botón Atrás.
+  check(
+    "móvil: navegar a una sección deja la URL en el hash",
+    (await mp.evaluate(() => location.hash)) === "#eventos",
+    await mp.evaluate(() => location.hash)
+  );
+  await mp.goBack();
+  await mp.waitForTimeout(800);
+  check(
+    "móvil: Atrás vuelve a la sección anterior",
+    await mp.locator("h2", { hasText: /Imágenes|Images/ }).first().isVisible()
+  );
+
+  await mp.goto(`${BASE}/#rider`, { waitUntil: "networkidle" });
+  await mp.waitForTimeout(900);
+  check(
+    "móvil: /#rider abre el rider directamente",
+    await mp.locator("h2", { hasText: /Technical Rider/ }).first().isVisible()
+  );
   await mobile.close();
 
   await browser.close();

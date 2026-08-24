@@ -43,3 +43,43 @@ export function IconYouTube({ className: cn }: { className?: string }) {
     </svg>
   );
 }
+
+export function IconTikTok({ className: cn }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={cn ?? className}
+      aria-hidden
+    >
+      <path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 0 1-2.59-2.59 2.59 2.59 0 0 1 3.39-2.46V9.7a5.68 5.68 0 0 0-.8-.06A5.68 5.68 0 0 0 4.18 15.3 5.68 5.68 0 0 0 9.86 21a5.68 5.68 0 0 0 5.68-5.68V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.28 4.28 0 0 1-3.24-1.48z" />
+    </svg>
+  );
+}
+
+/** Monograma, no el logotipo: su marca tiene tipografía propia y calcarla queda peor. */
+export function IconResidentAdvisor({ className: cn }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      className={cn ?? className}
+      aria-hidden
+    >
+      <rect x="1.1" y="4.6" width="21.8" height="14.8" rx="3.2" stroke="currentColor" strokeWidth="1.7" />
+      <text
+        x="12"
+        y="15.4"
+        textAnchor="middle"
+        fontSize="8.6"
+        fontWeight="700"
+        letterSpacing="0.4"
+        fill="currentColor"
+      >
+        RA
+      </text>
+    </svg>
+  );
+}

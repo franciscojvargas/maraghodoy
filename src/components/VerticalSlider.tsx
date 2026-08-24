@@ -8,6 +8,8 @@ import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const SWIPE_THRESHOLD = 35;
+/** Un trackpad dispara decenas de eventos por gesto: sin freno, un gesto se comía cuatro pases. */
+const WHEEL_COOLDOWN_MS = 500;
 
 function SliderInner({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -51,17 +53,40 @@ function SliderInner({ children }: { children: React.ReactNode }) {
     currentIndexRef.current = currentIndex;
   }, [currentIndex]);
 
+  const lastWheel = useRef(0);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
+      const now = Date.now();
+      if (now - lastWheel.current < WHEEL_COOLDOWN_MS) return;
       const idx = currentIndexRef.current;
-      if (e.deltaY > 30) goToSlide(idx + 1);
-      else if (e.deltaY < -30) goToSlide(idx - 1);
+      if (e.deltaY > 30) {
+        lastWheel.current = now;
+        goToSlide(idx + 1);
+      } else if (e.deltaY < -30) {
+        lastWheel.current = now;
+        goToSlide(idx - 1);
+      }
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
+  }, [goToSlide]);
+
+  // Sin esto la presentación no se puede recorrer con teclado.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const idx = currentIndexRef.current;
+      if (e.key === "ArrowDown" || e.key === "PageDown") goToSlide(idx + 1);
+      else if (e.key === "ArrowUp" || e.key === "PageUp") goToSlide(idx - 1);
+      else if (e.key === "Home") goToSlide(0);
+      else return;
+      e.preventDefault();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [goToSlide]);
 
   const touchTarget = useRef<EventTarget | null>(null);

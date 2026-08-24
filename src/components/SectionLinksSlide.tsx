@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useSlider } from "@/context/SliderContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSectionNav } from "@/hooks/useSectionNav";
 import { navLinks } from "@/content";
 import type { MobileSection } from "@/context/SliderContext";
 
@@ -13,8 +13,8 @@ const buttonClass =
   "rounded-full border border-white/40 bg-white/5 px-6 py-3 text-sm font-medium text-white hover:bg-white/10 hover:border-white/60 transition w-full max-w-xs mx-auto block text-center";
 
 export default function SectionLinksSlide() {
-  const { setCurrentSection } = useSlider();
   const { t } = useLanguage();
+  const { goToSection } = useSectionNav();
 
   const links = navLinks.filter((l) => sectionsToShow.includes(l.section));
 
@@ -39,7 +39,7 @@ export default function SectionLinksSlide() {
               key={section}
               type="button"
               className={buttonClass}
-              onClick={() => setCurrentSection(section)}
+              onClick={() => goToSection(section)}
             >
               {t[labelKey]}
             </button>

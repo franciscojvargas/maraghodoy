@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import { useMounted } from "@/hooks/useMounted";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useLanguage } from "@/context/LanguageContext";
 
 const SWIPE_THRESHOLD = 50;
 
@@ -16,16 +17,13 @@ export function ImageLightbox({
   currentIndex,
   onClose,
   onSelectIndex,
-  closeLabel = "Salir",
-  downloadLabel = "Descargar",
 }: {
   images: readonly ImageItem[];
   currentIndex: number;
   onClose: () => void;
   onSelectIndex: (index: number) => void;
-  closeLabel?: string;
-  downloadLabel?: string;
 }) {
+  const { t } = useLanguage();
   const image = images[currentIndex];
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < images.length - 1;
@@ -81,7 +79,7 @@ export function ImageLightbox({
       onTouchEnd={onTouchEnd}
       role="dialog"
       aria-modal="true"
-      aria-label="Vista ampliada de la imagen"
+      aria-label={t.lightboxLabel}
     >
       <div
         className="flex shrink-0 items-center justify-between gap-3 px-4 py-3 border-b border-white/30"
@@ -92,7 +90,7 @@ export function ImageLightbox({
           type="button"
           onClick={onClose}
           className="inline-flex items-center justify-center rounded-full p-2.5 text-white hover:bg-white/15 transition"
-          aria-label={closeLabel}
+          aria-label={t.lightboxClose}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7">
             <path d="M18 6L6 18M6 6l12 12" />
@@ -103,7 +101,7 @@ export function ImageLightbox({
           download={downloadFilename}
           onClick={(e) => e.stopPropagation()}
           className="inline-flex items-center justify-center rounded-full p-2.5 text-white hover:bg-white/15 transition"
-          aria-label={downloadLabel}
+          aria-label={t.lightboxDownload}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -122,7 +120,7 @@ export function ImageLightbox({
             onSelectIndex(currentIndex - 1);
           }}
           className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 text-white/80 hover:bg-white/10 hover:text-white transition md:left-4"
-          aria-label="Imagen anterior"
+          aria-label={t.lightboxPrev}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10">
             <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z" clipRule="evenodd" />
@@ -138,7 +136,7 @@ export function ImageLightbox({
             onSelectIndex(currentIndex + 1);
           }}
           className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 text-white/80 hover:bg-white/10 hover:text-white transition md:right-4"
-          aria-label="Siguiente imagen"
+          aria-label={t.lightboxNext}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10">
             <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clipRule="evenodd" />
@@ -162,7 +160,7 @@ export function ImageLightbox({
         </div>
       </div>
 
-      <p className="shrink-0 py-2 text-center text-sm text-white/60">
+      <p className="shrink-0 py-2 text-center text-sm text-white/75">
         {currentIndex + 1} / {images.length}
       </p>
     </div>
