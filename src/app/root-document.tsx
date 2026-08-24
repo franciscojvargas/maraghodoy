@@ -118,7 +118,6 @@ function buildJsonLd(lang: Lang) {
         description: siteConfig.description[lang],
         email: `mailto:${siteConfig.email}`,
         homeLocation: { "@type": "Place", name: "Sevilla, España" },
-        // El de RA entra sólo si existe: un enlace vacío ensucia el grafo.
         sameAs: [
           siteConfig.socials.instagram,
           siteConfig.socials.soundcloud,

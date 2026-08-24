@@ -16,11 +16,9 @@ function sectionFromHash(hash: string): MobileSection {
 }
 
 /**
- * Ata la sección móvil a la URL: `/#rider` abre el rider y el botón Atrás vuelve
- * a la sección anterior. En escritorio no hace falta, las secciones son anclas
- * reales. La lectura del hash va en un efecto y no en el estado inicial para que
- * el primer render del cliente coincida con el HTML, que siempre trae la
- * presentación.
+ * Ata la sección móvil a la URL. El hash se lee en un efecto y no en el estado
+ * inicial: el HTML prerenderizado siempre trae la presentación y el primer
+ * render del cliente tiene que coincidir.
  */
 export function useSectionHash() {
   const { setCurrentSection } = useSlider();

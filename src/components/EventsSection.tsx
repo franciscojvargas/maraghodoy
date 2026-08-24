@@ -40,10 +40,7 @@ function makeFormatters(lang: string) {
 const withoutAccents = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
-/**
- * Cuando el título ya es la ciudad (o la sala), repetirla debajo sobra. Compara
- * sin tildes para que "Los Ángeles" y "Los Angeles" cuenten como lo mismo.
- */
+/** Sin tildes, para que "Los Ángeles" y "Los Angeles" cuenten como la misma. */
 function contextLine(event: EventItem) {
   const city =
     withoutAccents(event.venue) === withoutAccents(event.city) ? null : event.city;
@@ -72,9 +69,8 @@ function EventRow({
   const { day, month } = dayAndMonth(formatter, event.date);
   const context = contextLine(event);
 
-  // Toda la fila abre el cartel: en móvil son 64 px de diana frente a 343. El
-  // botón de la miniatura se queda porque es el control accesible de verdad —lo
-  // que enfoca el teclado— y el `onClick` de la fila sólo amplía la zona táctil.
+  // La miniatura sigue siendo el botón accesible; el `onClick` de la fila sólo
+  // amplía la diana táctil.
   return (
     <li
       onClick={onOpenPoster}
@@ -155,14 +151,12 @@ export default function EventsSection({
 
   const formatterFor = useMemo(() => makeFormatters(lang), [lang]);
 
-  // En escritorio la home es un scroll continuo: "ver todos" despliega aquí
-  // mismo en vez de saltar a /eventos, que rompería ese formato. En móvil, que
-  // navega por secciones, se mantiene el enlace a la página.
+  // En escritorio "ver todos" despliega aquí: saltar a /eventos rompería el
+  // scroll continuo. En móvil, que navega por secciones, sí se enlaza la página.
   const showAll = variant === "full" || expanded;
   const list = showAll ? orderedEvents : orderedEvents.slice(0, TEASER_COUNT);
   const showSeeAll = variant === "teaser" && orderedEvents.length > TEASER_COUNT;
 
-  // Sólo los que tienen cartel, para que las flechas del visor no salten huecos.
   const posters = useMemo(
     () =>
       list

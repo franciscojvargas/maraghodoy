@@ -20,11 +20,7 @@ export const siteConfig = {
     soundcloud: "https://soundcloud.com/mara-ghodoy",
     youtube: "https://youtu.be/vWLnck3Br4k",
     tiktok: "https://www.tiktok.com/@maraghodoy",
-    /**
-     * Perfil de artista en Resident Advisor. Vacío no se pinta; con URL aparece
-     * en el cajón del menú, en el pie y en el `sameAs` del JSON-LD. El tipo es
-     * `string` a propósito: sin la aserción, `as const` lo fijaría a "".
-     */
+    /** Vacío no se pinta. `as string` porque `as const` lo fijaría a "". */
     residentAdvisor: "" as string,
   },
   videos: [

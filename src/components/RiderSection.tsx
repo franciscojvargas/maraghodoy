@@ -4,12 +4,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { AppleReveal } from "./AnimatedSection";
 import SectionJump from "./SectionJump";
 
-/**
- * Un rider es una hoja de especificaciones, así que se pinta como tal: panel con
- * borde, grupos numerados y guiones finos en vez de topos. En escritorio va a
- * dos columnas 5/7 —setup y formato pesan cinco líneas, los requisitos siete—
- * para que ninguna quede colgando; por debajo de `md` se apilan.
- */
 function Group({
   index,
   title,
@@ -46,6 +40,7 @@ export default function RiderSection() {
         <h2 className="mb-6 text-2xl font-semibold text-white">{t.riderTitle}</h2>
 
         <div className="overflow-hidden rounded-2xl border border-white/15 bg-white/[0.03]">
+          {/* El 5/7 iguala las dos columnas: cinco líneas contra siete. */}
           <div className="grid divide-y divide-white/10 md:grid-cols-[5fr_7fr] md:divide-x md:divide-y-0">
             <div className="space-y-8 p-6 sm:p-8">
               <Group index="01" title={t.riderSetup} items={t.riderSetupList} />

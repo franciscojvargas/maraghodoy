@@ -32,10 +32,9 @@ const CheckIcon = () => (
 );
 
 /**
- * El `mailto:` es la vía principal, pero en escritorio mucha gente no tiene
- * cliente de correo y el enlace no hace nada visible. La copia vive dentro de la
- * misma tarjeta, separada por una línea: el enlace y el botón son hermanos, que
- * es la única forma válida de tener dos acciones en una caja.
+ * En escritorio mucha gente no tiene cliente de correo y el `mailto:` no hace
+ * nada visible; de ahí la copia. Enlace y botón son hermanos: es la única forma
+ * válida de meter dos acciones en una caja.
  */
 function EmailCard({ email }: { email: string }) {
   const { t } = useLanguage();

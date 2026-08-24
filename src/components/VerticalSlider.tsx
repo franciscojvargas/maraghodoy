@@ -6,6 +6,7 @@ import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useSlider } from "@/context/SliderContext";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import { useIsMobile } from "@/hooks/useMediaQuery";
+import { useViewportHeight } from "@/hooks/useViewportHeight";
 
 const SWIPE_THRESHOLD = 35;
 /** Un trackpad dispara decenas de eventos por gesto: sin freno, un gesto se comía cuatro pases. */
@@ -36,17 +37,30 @@ function SliderInner({ children }: { children: React.ReactNode }) {
     };
   }, [isMobile]);
 
+  const slideHeight = useViewportHeight();
   const y = useMotionValue(0);
-  const translateY = useTransform(y, (v) => `${v}dvh`);
+  const translateY = useTransform(y, (v) => `${v}px`);
+  const lastHeight = useRef(0);
 
   useEffect(() => {
-    const controls = animate(y, -currentIndex * 100, {
+    if (!slideHeight) return;
+    const target = -currentIndex * slideHeight;
+
+    // Si lo que ha cambiado es el alto (un giro de pantalla), se recoloca en
+    // seco: deslizar ahí se vería como un salto.
+    if (lastHeight.current !== slideHeight) {
+      lastHeight.current = slideHeight;
+      y.set(target);
+      return;
+    }
+
+    const controls = animate(y, target, {
       type: "tween",
       duration: 0.4,
       ease: [0.25, 0.1, 0.25, 1],
     });
     return controls.stop;
-  }, [currentIndex, y]);
+  }, [currentIndex, slideHeight, y]);
 
   const currentIndexRef = useRef(currentIndex);
   useEffect(() => {
@@ -75,7 +89,6 @@ function SliderInner({ children }: { children: React.ReactNode }) {
     return () => el.removeEventListener("wheel", onWheel);
   }, [goToSlide]);
 
-  // Sin esto la presentación no se puede recorrer con teclado.
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const idx = currentIndexRef.current;
@@ -145,7 +158,7 @@ function SliderInner({ children }: { children: React.ReactNode }) {
 
 export default function VerticalSlider({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-screen max-h-[100dvh] w-full overflow-hidden bg-black">
+    <div className="h-full w-full overflow-hidden bg-black">
       <SliderInner>{children}</SliderInner>
     </div>
   );

@@ -17,7 +17,7 @@ export default {
   principalBlocks: [
     "Mara Ghodoy desarrolla un sonido situado entre el hardgroove y el hypnotic techno, con un enfoque claramente orientado a la pista, donde el ritmo, la percusión y el groove constante son el eje central de sus sesiones.",
     "Con más de cinco años de trayectoria, ha construido una identidad sólida basada en la precisión rítmica, la tensión progresiva y una lectura de pista madura, dando forma a sets intensos, dinámicos y en continua evolución.",
-    "Actualmente es residente en Cosmos Club y pertenece a Oscura Techno, y su proyecto está concebido para el circuito club europeo e internacional.",
+    "Actualmente es residente en Cosmos Club y pertenece a la agencia Oscura Techno, y su proyecto está concebido para el circuito club europeo e internacional.",
     "Ha actuado en España en ciudades como Madrid, Barcelona, Sevilla, Mérida, Málaga y Granada, pasando por salas y clubs como Cosmos Club, Paris15, Basshaus y Pandora, además de presentarse en Los Ángeles (EE. UU.).",
     "En paralelo, también trabaja en sus primeras producciones.\nReferencias: Grace Dahl · DJ Dextro · Axel Karakasis.",
   ],

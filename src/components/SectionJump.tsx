@@ -16,12 +16,7 @@ function MenuGlyph() {
   );
 }
 
-/**
- * Cierre de sección, sólo en móvil: abre el cajón del header, que ya lista todas
- * las secciones. En escritorio no hace falta porque la página es un scroll
- * continuo. El corte es por CSS y no por `useIsMobile` a propósito: así el
- * primer paint ya es correcto y no hay salto tras hidratar.
- */
+/** El corte es por CSS y no por `useIsMobile`: así no hay salto tras hidratar. */
 export default function SectionJump() {
   const { t } = useLanguage();
   const { setMenuOpen } = useSlider();

@@ -3,7 +3,6 @@
 import { useSlider } from "@/context/SliderContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-/** Cuántas pantallas quedan: la presentación son siete pases y sólo había la flecha del hero. */
 export default function SliderDots() {
   const { currentIndex, totalSlides, goToSlide } = useSlider();
   const { t } = useLanguage();

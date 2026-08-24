@@ -19,7 +19,7 @@ export default function SectionLinksSlide() {
   const links = navLinks.filter((l) => sectionsToShow.includes(l.section));
 
   return (
-    <div className="flex-shrink-0 w-full h-screen max-h-[100dvh] relative flex flex-col items-center justify-center px-6 overflow-hidden">
+    <div className="flex-shrink-0 w-full h-[var(--slide-h)] relative flex flex-col items-center justify-center px-6 overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Image
           src={BACKGROUND_IMAGE}
