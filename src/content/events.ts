@@ -18,6 +18,8 @@ export type EventItem = {
   poster?: string;
   /** Nombre de la fiesta, promotora o contexto. No artistas. */
   note?: string;
+  /** Entradas, evento de RA o post del cartel. Sólo se pinta si hay algo. */
+  url?: string;
   /**
    * Resto del cartel, sin Mara. Se pinta en la ficha y va como `performer` en el
    * JSON-LD: es lo que asocia cada artista con ella a ojos de Google.
@@ -284,6 +286,7 @@ export const orderedEvents: readonly EventItem[] = [...events].sort(
   (a, b) => Date.parse(b.date) - Date.parse(a.date)
 );
 
+
 /** Un MusicEvent por evento, pasados incluidos: Google descarta solos los caducados. */
 export function buildEventsJsonLd() {
   return events.map((event) => ({
@@ -310,5 +313,6 @@ export function buildEventsJsonLd() {
       ...(event.lineup ?? []).map((name) => ({ "@type": "MusicGroup", name })),
     ],
     ...(event.poster ? { image: `${siteConfig.url}${posterFull(event.poster)}` } : {}),
+    ...(event.url ? { url: event.url } : {}),
   }));
 }

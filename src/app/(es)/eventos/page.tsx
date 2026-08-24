@@ -1,20 +1,12 @@
-import type { Metadata } from "next";
 import EventsSection from "@/components/EventsSection";
 import Footer from "@/components/Footer";
 import { buildEventsJsonLd } from "@/content/events";
-import { translations } from "@/content";
+import { buildEventsMetadata, buildBreadcrumbJsonLd } from "@/app/root-document";
 
-export const metadata: Metadata = {
-  title: translations.es.eventsMetaTitle,
-  description: translations.es.eventsMetaDescription,
-  alternates: {
-    canonical: "/eventos",
-    languages: { es: "/eventos", en: "/en/events" },
-  },
-};
+export const metadata = buildEventsMetadata("es");
 
 export default function EventosPage() {
-  const jsonLd = buildEventsJsonLd();
+  const jsonLd = [buildBreadcrumbJsonLd("es"), ...buildEventsJsonLd()];
 
   return (
     <main className="pt-20">

@@ -9,9 +9,9 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { Lang } from "@/content";
-import { translations } from "@/content";
+import { translations, localizedPath } from "@/content";
 
 const LANG_STORAGE_KEY = "maraghodoy-lang";
 
@@ -27,6 +27,7 @@ const emptySubscribe = () => () => {};
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const routeLang: Lang = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "es";
 
   const getSnapshot = useCallback((): Lang => {
@@ -44,12 +45,25 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const setLang = useCallback((l: Lang) => {
-    setOverride(l);
-    window.localStorage.setItem(LANG_STORAGE_KEY, l);
-    const target = l === "en" ? "/en" : "/";
-    window.history.replaceState(null, "", `${target}${window.location.hash}`);
-  }, []);
+  /**
+   * Cambia de idioma sin perder la página. Si la ruta equivalente es otra se
+   * navega de verdad, para que el `<title>` y el canonical sean los suyos; si es
+   * la misma, basta con reescribir la URL sin tocar el historial.
+   */
+  const setLang = useCallback(
+    (l: Lang) => {
+      setOverride(l);
+      window.localStorage.setItem(LANG_STORAGE_KEY, l);
+      const target = localizedPath(pathname, l);
+      const hash = window.location.hash;
+      if (target === pathname) {
+        window.history.replaceState(null, "", `${target}${hash}`);
+        return;
+      }
+      router.replace(`${target}${hash}`);
+    },
+    [pathname, router]
+  );
 
   const t = translations[lang];
 

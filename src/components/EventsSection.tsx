@@ -61,22 +61,36 @@ function dayAndMonth(formatter: Intl.DateTimeFormat, iso: string) {
 function EventRow({
   event,
   formatter,
+  linkLabel,
   onOpenPoster,
 }: {
   event: EventItem;
   formatter: Intl.DateTimeFormat;
+  linkLabel: string;
   onOpenPoster?: () => void;
 }) {
   const { day, month } = dayAndMonth(formatter, event.date);
   const context = contextLine(event);
 
+  // Toda la fila abre el cartel: en móvil son 64 px de diana frente a 343. El
+  // botón de la miniatura se queda porque es el control accesible de verdad —lo
+  // que enfoca el teclado— y el `onClick` de la fila sólo amplía la zona táctil.
   return (
-    <li className="flex items-center gap-4 py-4 sm:gap-6 sm:py-5">
+    <li
+      onClick={onOpenPoster}
+      className={`flex items-center gap-4 py-4 sm:gap-6 sm:py-5 ${
+        onOpenPoster ? "cursor-pointer transition-colors hover:bg-white/[0.04]" : ""
+      }`}
+    >
       <div className="relative w-16 shrink-0 overflow-hidden rounded-lg aspect-[4/5] sm:w-20 lg:w-24">
         {event.poster ? (
           <button
             type="button"
-            onClick={onOpenPoster}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenPoster?.();
+            }}
+            aria-label={`${event.venue} · ${event.city}`}
             className="group block h-full w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
           >
             <Image
@@ -108,9 +122,21 @@ function EventRow({
           <p className="mt-1 font-medium text-white sm:mt-0">{event.venue}</p>
           {context && <p className="text-sm text-neutral-400">{context}</p>}
           {event.lineup && (
-            <p className="mt-1 text-xs leading-relaxed text-neutral-500">
+            <p className="mt-1 text-xs leading-relaxed text-neutral-400">
               {event.lineup.join(" · ")}
             </p>
+          )}
+          {event.url && (
+            <a
+              href={event.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/5 px-3 py-1 text-xs font-medium text-white transition hover:border-white/60 hover:bg-white/10"
+            >
+              {linkLabel}
+              <span aria-hidden>↗</span>
+            </a>
           )}
         </div>
       </div>
@@ -165,6 +191,7 @@ export default function EventsSection({
               key={event.id}
               event={event}
               formatter={formatterFor(event.timeZone)}
+              linkLabel={t.eventsLink}
               onOpenPoster={
                 event.poster
                   ? () =>
@@ -184,8 +211,6 @@ export default function EventsSection({
           currentIndex={posterIndex}
           onClose={() => setPosterIndex(null)}
           onSelectIndex={setPosterIndex}
-          closeLabel={t.lightboxClose}
-          downloadLabel={t.lightboxDownload}
         />
       )}
 
