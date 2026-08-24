@@ -46,9 +46,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [lang]);
 
   /**
-   * Cambia de idioma sin perder la página. Si la ruta equivalente es otra se
-   * navega de verdad, para que el `<title>` y el canonical sean los suyos; si es
-   * la misma, basta con reescribir la URL sin tocar el historial.
+   * Si la ruta equivalente es otra hay que navegar de verdad, o el `<title>` y
+   * el canonical se quedan en los de la página anterior.
    */
   const setLang = useCallback(
     (l: Lang) => {

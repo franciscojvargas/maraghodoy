@@ -9,7 +9,7 @@ export default function HeroSlide() {
   const { t } = useLanguage();
 
   return (
-    <div className="flex-shrink-0 w-full h-screen max-h-[100dvh] flex flex-col text-center px-6 relative overflow-hidden pt-20">
+    <div className="flex-shrink-0 w-full h-[var(--slide-h)] flex flex-col text-center px-6 relative overflow-hidden pt-20">
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/hero.webp"

@@ -3,11 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMounted } from "@/hooks/useMounted";
 
-/**
- * Retardo entre palabras. Con el fundido corto de 200 ms deja sólo unas tres
- * palabras a medias en cada momento, que es lo que hace que se lea como
- * escritura y no como un fundido en bloque.
- */
+/** Retardo entre palabras: deja unas tres a medias, y por eso se lee como escritura. */
 const STEP_MS = 62;
 /** Techo por bloque: un párrafo largo no debe tardar más que esto en completarse. */
 const MAX_TOTAL_MS = 4000;
@@ -18,10 +14,8 @@ type Props = {
 };
 
 /**
- * Revela el texto palabra a palabra. El texto va entero en el DOM desde el
- * prerender: sólo se anima la opacidad, así que sigue siendo indexable,
- * seleccionable y legible por lector de pantalla. Sin JS, o antes de montar,
- * se ve completo.
+ * El texto va entero en el DOM desde el prerender y sólo se anima la opacidad:
+ * sigue siendo indexable y legible por lector de pantalla. Sin JS se ve completo.
  */
 export default function RevealText({ text, className }: Props) {
   const mounted = useMounted();

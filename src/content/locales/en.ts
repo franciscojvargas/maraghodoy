@@ -17,7 +17,7 @@ export default {
   principalBlocks: [
     "Mara Ghodoy delivers a sound rooted in hardgroove and hypnotic techno, with a strong club-focused approach where rhythm, percussion and continuous groove shape her sets.",
     "With over five years of experience, she has built a solid artistic identity based on precise mixing, progressive tension and an evolved understanding of the dancefloor. Her performances are intense and dynamic, constantly evolving.",
-    "She is currently a resident at Cosmos Club and a member of Oscura Techno, with a project conceived for the European and international club circuit.",
+    "She is currently a resident at Cosmos Club and belongs to the Oscura Techno agency, with a project conceived for the European and international club circuit.",
     "She has performed in Spain in cities such as Madrid, Barcelona, Seville, Mérida, Málaga and Granada, playing venues and clubs like Cosmos Club, Paris15, Basshaus and Pandora, as well as appearing in Los Angeles (USA).",
     "Alongside her DJ career, she is working on her first original productions.\nReferences: Grace Dahl · DJ Dextro · Axel Karakasis.",
   ],

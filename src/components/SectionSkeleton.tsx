@@ -1,4 +1,3 @@
-/** Hueco mientras llega el chunk de una sección móvil. */
 export default function SectionSkeleton() {
   return (
     <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6 md:py-16" aria-busy="true">

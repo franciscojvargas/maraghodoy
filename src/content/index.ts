@@ -13,7 +13,6 @@ export const navLinks: readonly { href: string; section: "presentacion" | "event
   { href: "/contacto", section: "contacto", labelKey: "navContact" },
 ];
 
-/** Cada ruta con su equivalente en el otro idioma. */
 const localizedRoutes: readonly Record<Lang, string>[] = [
   { es: "/", en: "/en" },
   { es: "/eventos", en: "/en/events" },

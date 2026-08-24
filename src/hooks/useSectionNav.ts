@@ -32,8 +32,6 @@ export function useSectionNav() {
     }
     if (isMobile) {
       setCurrentSection(section);
-      // Una entrada de historial por sección: el Atrás vuelve a la anterior en
-      // vez de sacar del sitio, y la URL queda compartible.
       const url = section === "presentacion" ? homeHref : `${homeHref}#${section}`;
       if (window.location.pathname + window.location.hash !== url) {
         window.history.pushState(null, "", url);

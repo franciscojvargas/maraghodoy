@@ -4,10 +4,8 @@ const logoClass =
   "object-contain object-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]";
 
 /**
- * Las dos residencias. Van en fila también en móvil: apiladas comían demasiado
- * alto en un pase que ya lleva texto. Los tamaños están igualados por peso
- * óptico, no por caja: el de Cosmos es casi cuadrado y el de Oscura un
- * logotipo 5,5:1, así que el mismo alto los descompensaría.
+ * Tamaños igualados por peso óptico, no por caja: Cosmos es casi cuadrado y
+ * Oscura un logotipo 5,5:1, así que el mismo alto los descompensaría.
  */
 export default function ResidencyLogos() {
   return (

@@ -25,9 +25,7 @@ const DesktopScrollPage = dynamic(
   { ssr: true }
 );
 
-// `ssr: false` porque en móvil sólo se monta la sección activa. Sin `loading`,
-// tocar una sección con la caché fría deja la pantalla en negro hasta que llega
-// el chunk.
+// Sin `loading`, tocar una sección con la caché fría deja la pantalla en negro.
 const loading = () => <SectionSkeleton />;
 
 const EventsSection = dynamic(() => import("@/components/EventsSection"), { ssr: false, loading });
@@ -78,20 +76,14 @@ function MobileContent() {
 }
 
 export default function HomeClient() {
-  // La sección móvil vive en la URL: enlaces profundos y botón Atrás.
   useSectionHash();
 
   const isMobile = useIsMobile();
   const mounted = useMounted();
 
-  /*
-   * Los dos árboles van en el HTML y la media query decide cuál se ve: el primer
-   * paint ya es correcto en cada dispositivo, sin flash. Mantener los dos
-   * montados después cuesta ~485 nodos y un puñado de `useScroll` e
-   * IntersectionObservers que nadie mira, así que en cuanto hidrata —y sólo
-   * entonces, para que el primer render cuadre con el HTML— se desmonta el que
-   * sobra.
-   */
+  // Los dos árboles van en el HTML para que el primer paint sea correcto sin
+  // flash; el que sobra se desmonta al hidratar, no antes, o el primer render
+  // del cliente no cuadraría con el HTML.
   const showMobile = !mounted || isMobile;
   const showDesktop = !mounted || !isMobile;
 

@@ -3,6 +3,9 @@
 :root {
   --background: #000000;
   --foreground: #fafafa;
+  /* Alto de una pantalla del slider. `useViewportHeight` lo sobrescribe con el
+     alto real en píxeles; este `100dvh` es sólo el valor del primer pintado. */
+  --slide-h: 100dvh;
 }
 
 @theme inline {

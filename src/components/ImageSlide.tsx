@@ -13,7 +13,7 @@ type Props = {
 
 export default function ImageSlide({ src, alt, children, extraAbove, extraBelow }: Props) {
   return (
-    <div className="flex-shrink-0 w-full h-screen max-h-[100dvh] relative flex flex-col overflow-hidden">
+    <div className="flex-shrink-0 w-full h-[var(--slide-h)] relative flex flex-col overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Image
           src={src}
