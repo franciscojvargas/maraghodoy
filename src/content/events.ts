@@ -267,6 +267,17 @@ export const events: readonly EventItem[] = [
     lineup: ["Dygø"],
   },
   {
+    id: "2026-09-11-cosmos-helion",
+    date: "2026-09-11T23:59:00+02:00",
+    endDate: "2026-09-12T07:00:00+02:00",
+    venue: "Cosmos Club",
+    city: "Sevilla",
+    country: "ES",
+    poster: "2026-09-11-cosmos-helion",
+    note: "Helion",
+    lineup: ["Laure Croft", "Lynde", "Darman"],
+  },
+  {
     id: "2026-09-12-matadero-luciid",
     date: "2026-09-12T23:59:00+02:00",
     venue: "Matadero",
@@ -274,6 +285,16 @@ export const events: readonly EventItem[] = [
     country: "ES",
     poster: "2026-09-12-matadero-luciid",
     lineup: ["Luciid", "Armero", "Fhiga", "Kevin Paviani", "Wild"],
+  },
+  {
+    id: "2026-09-19-paris15-orion",
+    date: "2026-09-19T23:59:00+02:00",
+    venue: "Paris15",
+    city: "Málaga",
+    country: "ES",
+    poster: "2026-09-19-paris15-orion",
+    note: "Orion Opening Season · b2b Fhiga",
+    lineup: ["Fhiga", "Abstract"],
   },
 ];
 
