@@ -296,6 +296,17 @@ export const events: readonly EventItem[] = [
     note: "Orion Opening Season · b2b Fhiga",
     lineup: ["Fhiga", "Abstract"],
   },
+  {
+    id: "2026-10-02-cosmos-helion",
+    date: "2026-10-02T23:59:00+02:00",
+    endDate: "2026-10-03T07:00:00+02:00",
+    venue: "Cosmos Club",
+    city: "Sevilla",
+    country: "ES",
+    poster: "2026-10-02-cosmos-helion",
+    note: "Helion",
+    lineup: ["Grace Dahl", "Duckman", "Javibet"],
+  },
 ];
 
 /**
