@@ -59,6 +59,16 @@ try {
   check("sitemap.xml con hreflang", sitemapXml.includes('hreflang="en"'));
   check("og.jpg", (await fetch(`${BASE}/images/og.jpg`)).ok);
   check("hreflang x-default", rawEs.includes('hrefLang="x-default"'));
+  // El host que sirve Vercel es www: sin él, canonical y hreflang apuntan a una redirección.
+  check(
+    "canonical en el host www",
+    rawEs.includes('<link rel="canonical" href="https://www.maraghodoy.com"') &&
+      rawEn.includes('<link rel="canonical" href="https://www.maraghodoy.com/en"')
+  );
+  // Nada prerenderizado a opacidad 0: sin JS, o hasta que hidrata, se tiene que ver.
+  const ocultos = (html) => (html.match(/style="[^"]*opacity:0[;"]/g) ?? []).length;
+  check("/ sin bloques ocultos hasta hidratar", ocultos(rawEs) === 0, `${ocultos(rawEs)} ocultos`);
+  check("/en sin bloques ocultos hasta hidratar", ocultos(rawEn) === 0, `${ocultos(rawEn)} ocultos`);
   check("manifest.webmanifest", (await fetch(`${BASE}/manifest.webmanifest`)).ok);
   check("favicon 512", (await fetch(`${BASE}/icon.png`)).ok);
   check("apple-touch-icon", (await fetch(`${BASE}/apple-icon.png`)).ok);
@@ -67,7 +77,7 @@ try {
   const rawEventsEn = await (await fetch(`${BASE}/en/events`)).text();
   check("/eventos prerender español", rawEventos.includes(">Eventos<") && rawEventos.includes('<html lang="es"'));
   check("/en/events prerender inglés", rawEventsEn.includes(">Events<") && rawEventsEn.includes('<html lang="en"'));
-  check("/eventos hreflang cruzado", rawEventos.includes('href="https://maraghodoy.com/en/events"'));
+  check("/eventos hreflang cruzado", rawEventos.includes('href="https://www.maraghodoy.com/en/events"'));
   const rawSitemap = await (await fetch(`${BASE}/sitemap.xml`)).text();
   check("sitemap incluye eventos", rawSitemap.includes("/eventos") && rawSitemap.includes("/en/events"));
   // Desde una ruta propia el nav debe volver a la home, no apuntar a anclas inexistentes.
@@ -82,6 +92,13 @@ try {
   } else {
     check("/eventos: JSON-LD MusicEvent", rawEventos.includes('"@type":"MusicEvent"'));
     check("/eventos: miga de pan", rawEventos.includes('"@type":"BreadcrumbList"'));
+    // Con `party`, el MusicEvent se llama como el cartel y no sólo por la sala.
+    const eventNames = [...rawEventos.matchAll(/"@type":"MusicEvent","name":"([^"]+)"/g)].map((m) => m[1]);
+    check(
+      "/eventos: JSON-LD con el nombre de la fiesta",
+      eventNames.includes("Helion · Cosmos Club"),
+      eventNames.slice(0, 3).join(" | ")
+    );
 
     // Sin partir por pasado/futuro: el HTML no puede depender del día del build.
     const descending = eventDates.every((d, i) => i === 0 || d <= eventDates[i - 1]);
@@ -103,6 +120,32 @@ try {
   await dp.goto(BASE, { waitUntil: "networkidle" });
 
   check("sin iframes de terceros al cargar", (await dp.locator("iframe").count()) === 0);
+  const bodyFont = await dp.evaluate(() => getComputedStyle(document.body).fontFamily);
+  check("tipografía Space Grotesk aplicada", bodyFont.includes("Space Grotesk"), bodyFont);
+
+  // Las entradas al hacer scroll tienen que acabar todas visibles.
+  const alto = await dp.evaluate(() => document.documentElement.scrollHeight);
+  for (let y = 0; y < alto; y += 500) {
+    await dp.evaluate((top) => window.scrollTo(0, top), y);
+    await dp.waitForTimeout(80);
+  }
+  await dp.waitForTimeout(2000);
+  const entradas = await dp.evaluate(() => {
+    const els = [...document.querySelectorAll(".reveal, [data-inview] > .reveal-item")].filter(
+      (el) => el.offsetParent !== null
+    );
+    return {
+      total: els.length,
+      visibles: els.filter((el) => parseFloat(getComputedStyle(el).opacity) > 0.99).length,
+    };
+  });
+  check(
+    "entradas: todos los bloques terminan visibles",
+    entradas.total > 0 && entradas.visibles === entradas.total,
+    `${entradas.visibles}/${entradas.total}`
+  );
+  await dp.evaluate(() => window.scrollTo(0, 0));
+  await dp.waitForTimeout(300);
 
   await dp.locator("button", { hasText: "EN" }).first().click();
   await dp.waitForTimeout(400);
@@ -202,6 +245,27 @@ try {
   }
   await desktop.close();
 
+  // Un navegador en inglés en `/`: la página sigue en español —si no, Google la
+  // ve como un duplicado de /en— y se le ofrece la versión inglesa.
+  const english = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: "en-US" });
+  const ep = await english.newPage();
+  ep.on("pageerror", (e) => pageErrors.push(e.message));
+  await ep.goto(BASE, { waitUntil: "networkidle" });
+  await ep.waitForTimeout(1200);
+  check(
+    "navegador en inglés: / sigue en español",
+    (await ep.evaluate(() => document.documentElement.lang)) === "es" &&
+      (await ep.locator("#principal").innerText()).includes("hardgroove y el hypnotic")
+  );
+  const sugerencia = ep.locator("aside", { hasText: "also available in English" });
+  check("navegador en inglés: se sugiere /en", await sugerencia.isVisible());
+  await sugerencia.getByRole("button", { name: "View in English" }).click();
+  await ep.waitForURL(`${BASE}/en`);
+  check("la sugerencia lleva a /en", (await ep.evaluate(() => location.pathname)) === "/en");
+  await ep.waitForTimeout(1200);
+  check("en /en ya no se sugiere nada", (await ep.locator("aside[lang]").count()) === 0);
+  await english.close();
+
   const mobile = await browser.newContext({
     viewport: { width: 390, height: 844 },
     hasTouch: true,
@@ -244,6 +308,34 @@ try {
   check(
     "móvil: /#rider abre el rider directamente",
     await mp.locator("h2", { hasText: /Technical Rider/ }).first().isVisible()
+  );
+
+  await mp.goto(`${BASE}/#contacto`, { waitUntil: "networkidle" });
+  await mp.waitForTimeout(900);
+  const email = await mp.evaluate(() => {
+    const link = document.querySelector('a[href^="mailto:"]');
+    const spans = link ? [...link.querySelectorAll("span")] : [];
+    return {
+      texto: link?.textContent ?? "",
+      recortado: spans.some((el) => el.scrollWidth > el.clientWidth + 1),
+    };
+  });
+  check(
+    "móvil: el email de contacto se ve entero",
+    email.texto.includes("booking@maraghodoy.com") && !email.recortado,
+    email.texto
+  );
+
+  // /eventos scrollea como una página normal: la cabecera necesita su fondo.
+  await mp.goto(`${BASE}/eventos`, { waitUntil: "networkidle" });
+  await mp.waitForTimeout(600);
+  await mp.evaluate(() => window.scrollTo(0, 600));
+  await mp.waitForTimeout(500);
+  const headerBg = await mp.evaluate(() => getComputedStyle(document.querySelector("header")).backgroundColor);
+  check(
+    "móvil: en /eventos la cabecera toma fondo al hacer scroll",
+    headerBg !== "rgba(0, 0, 0, 0)" && headerBg !== "transparent",
+    headerBg
   );
   await mobile.close();
 

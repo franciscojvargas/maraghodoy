@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/content/site";
 import { useLanguage } from "@/context/LanguageContext";
-import { StaggerChildren, StaggerItem } from "./AnimatedSection";
+import { StaggerChildren } from "./AnimatedSection";
 import { IconInstagram } from "./SocialIcons";
 import SectionJump from "./SectionJump";
 
@@ -39,6 +39,7 @@ const CheckIcon = () => (
 function EmailCard({ email }: { email: string }) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
+  const at = email.indexOf("@");
 
   useEffect(() => {
     if (!copied) return;
@@ -65,7 +66,13 @@ function EmailCard({ email }: { email: string }) {
           <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">
             {t.contactEmailButton}
           </span>
-          <span className="block text-white font-medium truncate">{email}</span>
+          {/* Nunca recortado: es el dato por el que viene la gente. Si no cabe,
+              parte antes de la arroba y no a mitad de dominio. */}
+          <span className="block text-white font-medium break-words">
+            {email.slice(0, at)}
+            <wbr />
+            {email.slice(at)}
+          </span>
         </span>
       </a>
       <button
@@ -89,35 +96,33 @@ export default function ContactSection() {
   const instagramHandle = new URL(socials.instagram).pathname.replace(/\//g, "");
 
   return (
-    <section className="px-6 max-w-3xl mx-auto py-8 md:py-20">
-      <StaggerChildren className="space-y-0" staggerDelay={0.08}>
-        <StaggerItem>
+    <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6 md:py-20">
+      <StaggerChildren staggerDelay={0.08}>
+        <div>
           <h2 className="text-2xl font-semibold mb-2">{t.contactTitle}</h2>
           <p className="text-neutral-400 text-sm mb-8">
             {t.contactSubline} · {t.contactBased}
           </p>
-        </StaggerItem>
-        <StaggerItem>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <EmailCard email={email} />
-            <a
-              href={socials.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${cardClass} items-center gap-4 p-5`}
-            >
-              <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-600/20 group-hover:from-amber-500/30 group-hover:to-rose-600/30 text-white transition-all shrink-0">
-                <IconInstagram className="w-8 h-8 shrink-0" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <EmailCard email={email} />
+          <a
+            href={socials.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${cardClass} items-center gap-4 p-5`}
+          >
+            <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-600/20 group-hover:from-amber-500/30 group-hover:to-rose-600/30 text-white transition-all shrink-0">
+              <IconInstagram className="w-8 h-8 shrink-0" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">
+                {t.contactInstagram}
               </span>
-              <span className="min-w-0">
-                <span className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-0.5">
-                  {t.contactInstagram}
-                </span>
-                <span className="block text-white font-medium">@{instagramHandle}</span>
-              </span>
-            </a>
-          </div>
-        </StaggerItem>
+              <span className="block text-white font-medium">@{instagramHandle}</span>
+            </span>
+          </a>
+        </div>
       </StaggerChildren>
 
       <SectionJump />

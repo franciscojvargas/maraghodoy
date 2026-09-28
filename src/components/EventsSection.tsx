@@ -44,7 +44,7 @@ const withoutAccents = (s: string) =>
 function contextLine(event: EventItem) {
   const city =
     withoutAccents(event.venue) === withoutAccents(event.city) ? null : event.city;
-  return [city, event.note].filter(Boolean).join(" · ");
+  return [city, event.party, event.note].filter(Boolean).join(" · ");
 }
 
 function dayAndMonth(formatter: Intl.DateTimeFormat, iso: string) {

@@ -1,135 +1,132 @@
 "use client";
 
-import { motion } from "framer-motion";
+import {
+  Children,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import { useMounted } from "@/hooks/useMounted";
 
-const appleEase = [0.16, 1, 0.3, 1] as const;
+/**
+ * Entradas al llegar al viewport. La animación es CSS (`reveal-in` en
+ * globals.css); aquí sólo se decide cuándo, con el atributo `data-inview`.
+ *
+ * Con framer el HTML prerenderizado traía cada bloque a opacidad 0 hasta
+ * hidratar: sin JS, o con JS lento, la página se veía vacía. Ahora el HTML no
+ * lleva el atributo y se ve entero. Al hidratar sólo se ocultan los bloques que
+ * aún quedan por debajo de la pantalla, que nadie ha visto; lo que ya está a la
+ * vista se queda quieto. Lo que se monta después de hidratar (las secciones del
+ * móvil, que no se prerenderizan) nace oculto y entra en cuanto aparece.
+ */
+function useInView() {
+  const ref = useRef<HTMLDivElement>(null);
+  const mounted = useMounted();
+  // `mounted` es false al hidratar y true en lo que se monta después.
+  const [phase, setPhase] = useState<"shown" | "pending" | "run">(() =>
+    mounted ? "pending" : "shown"
+  );
 
-type Props = {
-  children: React.ReactNode;
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setPhase((p) => (p === "pending" ? "run" : p));
+        observer.disconnect();
+      } else if (entry.boundingClientRect.top > 0) {
+        // Por debajo de la pantalla: se puede ocultar sin que nadie lo vea.
+        setPhase((p) => (p === "shown" ? "pending" : p));
+      }
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, inView: phase === "shown" ? undefined : phase };
+}
+
+const ms = (seconds: number) => `${Math.round(seconds * 1000)}ms`;
+
+type Motion = {
+  y: number;
+  scale?: number;
+  duration: number;
+  ease?: string;
+};
+
+const APPLE_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+const SOFT_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+
+/** Todas las variables explícitas: si no, un bloque anidado heredaría las del de fuera. */
+function motionVars({ y, scale = 1, duration, ease = APPLE_EASE }: Motion, delay: number, stagger = 0) {
+  return {
+    "--reveal-y": `${y}px`,
+    "--reveal-scale": scale,
+    "--reveal-duration": ms(duration),
+    "--reveal-ease": ease,
+    "--reveal-delay": ms(delay),
+    "--reveal-stagger": ms(stagger),
+    "--reveal-i": 0,
+  } as CSSProperties;
+}
+
+type RevealProps = {
+  children: ReactNode;
   className?: string;
+  /** Segundos. */
   delay?: number;
 };
 
-export function FadeIn({ children, className = "", delay = 0 }: Props) {
+function Reveal({ children, className = "", delay = 0, motion }: RevealProps & { motion: Motion }) {
+  const { ref, inView } = useInView();
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={className}
-    >
+    <div ref={ref} data-inview={inView} className={`reveal ${className}`} style={motionVars(motion, delay)}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
-export function StaggerChildren({
-  children,
-  className = "",
-  staggerDelay = 0.08,
-}: {
-  children: React.ReactNode;
+type StaggerProps = {
+  children: ReactNode;
   className?: string;
+  /** Segundos entre un hijo y el siguiente. */
   staggerDelay?: number;
-}) {
-  return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
-      variants={{
-        visible: {
-          transition: { staggerChildren: staggerDelay, delayChildren: 0.1 },
-        },
-        hidden: {},
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
 };
 
-export function StaggerItem({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+/** Cada hijo va en su propio `.reveal-item` con su índice: el retardo lo calcula el CSS. */
+function Stagger({ children, className = "", staggerDelay = 0.08, motion }: StaggerProps & { motion: Motion }) {
+  const { ref, inView } = useInView();
   return (
-    <motion.div variants={itemVariants} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className={className}>
-      {children}
-    </motion.div>
+    <div ref={ref} data-inview={inView} className={className} style={motionVars(motion, 0.1, staggerDelay)}>
+      {Children.toArray(children).map((child, i) => (
+        <div
+          key={isValidElement(child) && child.key != null ? child.key : i}
+          className="reveal-item"
+          style={{ "--reveal-i": i } as CSSProperties}
+        >
+          {child}
+        </div>
+      ))}
+    </div>
   );
 }
 
-export function AppleReveal({ children, className = "", delay = 0 }: Props) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 48, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-80px", amount: 0.2 }}
-      transition={{ duration: 1, delay, ease: appleEase }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+export function FadeIn(props: RevealProps) {
+  return <Reveal {...props} motion={{ y: 0, duration: 0.7, ease: SOFT_EASE }} />;
 }
 
-const appleItemVariants = {
-  hidden: { opacity: 0, y: 36, scale: 0.96 },
-  visible: { opacity: 1, y: 0, scale: 1 },
-};
-
-export function AppleStagger({
-  children,
-  className = "",
-  staggerDelay = 0.08,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  staggerDelay?: number;
-}) {
-  return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-60px", amount: 0.15 }}
-      variants={{
-        visible: {
-          transition: { staggerChildren: staggerDelay, delayChildren: 0.1 },
-        },
-        hidden: {},
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+export function AppleReveal(props: RevealProps) {
+  return <Reveal {...props} motion={{ y: 48, scale: 0.96, duration: 1 }} />;
 }
 
-export function AppleStaggerItem({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <motion.div
-      variants={appleItemVariants}
-      transition={{ duration: 0.85, ease: appleEase }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+export function StaggerChildren(props: StaggerProps) {
+  return <Stagger {...props} motion={{ y: 20, duration: 0.5, ease: SOFT_EASE }} />;
+}
+
+export function AppleStagger(props: StaggerProps) {
+  return <Stagger {...props} motion={{ y: 36, scale: 0.96, duration: 0.85 }} />;
 }
