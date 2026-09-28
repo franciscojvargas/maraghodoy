@@ -16,7 +16,12 @@ export type EventItem = {
   timeZone?: string;
   /** Slug del cartel en carteles/, sin ruta ni extensión. */
   poster?: string;
-  /** Nombre de la fiesta, promotora o contexto. No artistas. */
+  /**
+   * Nombre de la fiesta o ciclo tal como sale en el cartel ("Helion", "CRVX").
+   * Da nombre al MusicEvent del JSON-LD; sin él, el evento se llama por la sala.
+   */
+  party?: string;
+  /** El resto del contexto: b2b, duración, lugar concreto… No artistas. */
   note?: string;
   /** Entradas, evento de RA o post del cartel. Sólo se pinta si hay algo. */
   url?: string;
@@ -63,7 +68,7 @@ export const events: readonly EventItem[] = [
     city: "Torremolinos",
     country: "ES",
     poster: "2024-04-26-true-abstract",
-    note: "Abstract",
+    party: "Abstract",
     lineup: ["Rian Wood", "GNRØ", "Clavero GNS", "N2MU"],
   },
   {
@@ -84,7 +89,8 @@ export const events: readonly EventItem[] = [
     city: "Málaga",
     country: "ES",
     poster: "2024-10-31-paris15-halloween",
-    note: "Abstract Halloween · Etika showcase",
+    party: "Abstract Halloween",
+    note: "Etika showcase",
     lineup: ["Afem Syko", "Aphøtic", "GNRØ", "Fhiga", "wae.wav"],
   },
   {
@@ -95,7 +101,8 @@ export const events: readonly EventItem[] = [
     city: "Barcelona",
     country: "ES",
     poster: "2025-01-18-basshaus-korner2korner",
-    note: "Korner 2 Korner · b2b wae.wav",
+    party: "Korner 2 Korner",
+    note: "b2b wae.wav",
     lineup: ["Gaston Zani", "DXPE", "SBA", "Ozzwald", "wae.wav", "Nahum Korm", "Cronekia"],
   },
   {
@@ -105,7 +112,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2025-03-29-cosmos-no-sleep",
-    note: "No Sleep",
+    party: "No Sleep",
     lineup: ["Barbara Lago", "Dygø", "Danza Macabra"],
   },
   {
@@ -115,7 +122,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2025-06-13-cosmos-no-sleep-closing",
-    note: "No Sleep closing party",
+    party: "No Sleep closing party",
     lineup: ["Essan", "Dygø", "KRX"],
   },
   {
@@ -125,7 +132,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2025-07-04-pandora-crvx",
-    note: "CRVX",
+    party: "CRVX",
     lineup: ["Charlie Sparks", "Lee Ann Roberts"],
   },
   {
@@ -135,7 +142,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2025-10-17-pandora-crvx",
-    note: "CRVX",
+    party: "CRVX",
     lineup: ["Dyen", "SNTS", "Isabela Clerc"],
   },
   {
@@ -145,7 +152,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2025-10-25-cosmos-helion",
-    note: "Helion",
+    party: "Helion",
     lineup: ["Carmen Electro", "Danza Macabra", "Sandersweet"],
   },
   {
@@ -168,7 +175,8 @@ export const events: readonly EventItem[] = [
     country: "US",
     timeZone: "America/Los_Angeles",
     poster: "2025-12-06-eu-lab-los-angeles",
-    note: "Secret Warehouse · EU-LAB · US debut",
+    party: "EU-LAB",
+    note: "Secret Warehouse · US debut",
     lineup: ["Balaclava", "Casska", "Kemosabe"],
   },
   {
@@ -179,7 +187,8 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2026-01-01-pandora-diauno",
-    note: "Diauno · 12 h",
+    party: "Diauno",
+    note: "12 h",
     lineup: ["Mason Collective", "Raul Pacheco", "Álvaro Prieto", "Baffi", "Diego Lavida"],
   },
   {
@@ -189,7 +198,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2026-01-24-cosmos-helion",
-    note: "Helion",
+    party: "Helion",
     lineup: ["Ruiz OSC1", "Duckman", "Lynde"],
   },
   {
@@ -211,7 +220,8 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2026-03-14-elysium-oscura",
-    note: "Oscura x Stigma Tribale · 12 h",
+    party: "Oscura x Stigma Tribale",
+    note: "12 h",
     lineup: ["Tensal", "Phil Berg", "Bastet", "Amarat", "Danza Macabra", "David Villalobos", "JJHZ3", "Mario Tishok", "Sekye"],
   },
   {
@@ -221,7 +231,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2026-05-08-pandora-rebels",
-    note: "Rebels",
+    party: "Rebels",
     lineup: ["999999999", "Barbara Lago"],
   },
   {
@@ -242,7 +252,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2026-05-29-cosmos-helion",
-    note: "Helion",
+    party: "Helion",
     lineup: ["Elli Acula", "Sodomak", "Gøta"],
   },
   {
@@ -253,7 +263,8 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2026-07-04-pandora-hyperlink",
-    note: "Hyperlink · Fantasm · 12 h",
+    party: "Hyperlink",
+    note: "Fantasm · 12 h",
     lineup: ["Dexphase", "Fhiga", "GNRØ", "Javi Gongora", "Krenon", "S.Ø.K.A.R.", "Sancer"],
   },
   {
@@ -274,7 +285,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2026-09-11-cosmos-helion",
-    note: "Helion",
+    party: "Helion",
     lineup: ["Laure Croft", "Lynde", "Darman"],
   },
   {
@@ -293,7 +304,8 @@ export const events: readonly EventItem[] = [
     city: "Málaga",
     country: "ES",
     poster: "2026-09-19-paris15-orion",
-    note: "Orion Opening Season · b2b Fhiga",
+    party: "Orion Opening Season",
+    note: "b2b Fhiga",
     lineup: ["Fhiga", "Abstract"],
   },
   {
@@ -304,7 +316,7 @@ export const events: readonly EventItem[] = [
     city: "Sevilla",
     country: "ES",
     poster: "2026-10-02-cosmos-helion",
-    note: "Helion",
+    party: "Helion",
     lineup: ["Grace Dahl", "Duckman", "Javibet"],
   },
 ];
@@ -324,7 +336,9 @@ export function buildEventsJsonLd() {
   return events.map((event) => ({
     "@context": "https://schema.org",
     "@type": "MusicEvent",
-    name: `${siteConfig.name} · ${event.venue}`,
+    // El nombre del cartel es el que usan ticketeras y RA: ayuda a Google a
+    // reconocer que es el mismo evento. Mara ya va en `performer`.
+    name: `${event.party ?? siteConfig.name} · ${event.venue}`,
     startDate: event.date,
     ...(event.endDate ? { endDate: event.endDate } : {}),
     eventStatus: "https://schema.org/EventScheduled",

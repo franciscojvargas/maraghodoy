@@ -13,7 +13,11 @@ export const siteConfig = {
     es: "Press kit oficial de Mara Ghodoy, DJ y productora de techno (hardgroove e hypnotic techno). Sesiones, vídeos, fotos de prensa, technical rider y contacto de booking. Residente en Cosmos Club, Sevilla.",
     en: "Official press kit of DJ and producer Mara Ghodoy. Hardgroove & hypnotic techno. Music, videos, press photos, technical rider and booking contact. Resident at Cosmos Club, Seville.",
   },
-  url: "https://maraghodoy.com",
+  /**
+   * El host que sirve Vercel. Sin `www` redirige aquí, así que canonical,
+   * hreflang, sitemap y JSON-LD tienen que ir con él o apuntan a una redirección.
+   */
+  url: "https://www.maraghodoy.com",
   email: "booking@maraghodoy.com",
   socials: {
     instagram: "https://instagram.com/maraghodoy",

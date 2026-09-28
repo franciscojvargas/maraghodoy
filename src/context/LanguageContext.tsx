@@ -1,17 +1,9 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-  useSyncExternalStore,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useCallback, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { Lang } from "@/content";
-import { translations, localizedPath } from "@/content";
+import { localizedPath, translations } from "@/content";
 
 const LANG_STORAGE_KEY = "maraghodoy-lang";
 
@@ -23,43 +15,40 @@ type LanguageContextType = {
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
-const emptySubscribe = () => () => {};
+/** Guarda la elección del visitante. Sin almacenamiento (modo privado) no pasa nada. */
+export function rememberLang(lang: Lang) {
+  try {
+    window.localStorage.setItem(LANG_STORAGE_KEY, lang);
+  } catch {}
+}
 
+/** Lo que eligió la última vez o, si nunca eligió, el idioma del navegador. */
+export function readPreferredLang(): Lang {
+  try {
+    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+    if (stored === "es" || stored === "en") return stored;
+  } catch {}
+  return navigator.language.toLowerCase().startsWith("es") ? "es" : "en";
+}
+
+/**
+ * El idioma es siempre el de la ruta: `/` y `/eventos` en español, `/en/…` en
+ * inglés. Si se dedujera del navegador, `/` se pintaría en inglés para quien lo
+ * tenga en inglés —Googlebot incluido— con el título y el canonical en español,
+ * y Google vería `/` y `/en` como la misma página. La preferencia del visitante
+ * sólo se usa para sugerirle el otro idioma (`LanguageSuggestion`).
+ */
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const routeLang: Lang = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "es";
+  const lang: Lang = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "es";
 
-  const getSnapshot = useCallback((): Lang => {
-    if (routeLang === "en") return "en";
-    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
-    if (stored === "es" || stored === "en") return stored;
-    return navigator.language.toLowerCase().startsWith("es") ? "es" : "en";
-  }, [routeLang]);
-
-  const detectedLang = useSyncExternalStore(emptySubscribe, getSnapshot, () => routeLang);
-  const [override, setOverride] = useState<Lang | null>(null);
-  const lang = override ?? detectedLang;
-
-  useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
-
-  /**
-   * Si la ruta equivalente es otra hay que navegar de verdad, o el `<title>` y
-   * el canonical se quedan en los de la página anterior.
-   */
+  /** Cada idioma tiene su ruta: cambiarlo es navegar, y así cambian también `<title>` y canonical. */
   const setLang = useCallback(
     (l: Lang) => {
-      setOverride(l);
-      window.localStorage.setItem(LANG_STORAGE_KEY, l);
+      rememberLang(l);
       const target = localizedPath(pathname, l);
-      const hash = window.location.hash;
-      if (target === pathname) {
-        window.history.replaceState(null, "", `${target}${hash}`);
-        return;
-      }
-      router.replace(`${target}${hash}`);
+      if (target !== pathname) router.replace(`${target}${window.location.hash}`);
     },
     [pathname, router]
   );

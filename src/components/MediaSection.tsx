@@ -6,7 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { galleryImages, INITIAL_GALLERY_COUNT } from "@/content/gallery";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { AppleReveal, AppleStagger, AppleStaggerItem } from "./AnimatedSection";
+import { AppleReveal, AppleStagger } from "./AnimatedSection";
 import { IconSoundCloud, IconYouTube } from "./SocialIcons";
 import { ImageLightbox } from "./ImageLightbox";
 import { PdfIcon, DownloadArrowIcon } from "./DownloadIcons";
@@ -53,9 +53,7 @@ export default function MediaSection() {
         <h2 className="text-2xl font-semibold mb-6">{t.imagesTitle}</h2>
         <AppleStagger className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4" staggerDelay={0.07}>
           {initialImages.map(({ src, alt }, i) => (
-            <AppleStaggerItem key={src}>
-              <GalleryThumb src={src} alt={alt} onOpen={() => setLightboxIndex(i)} />
-            </AppleStaggerItem>
+            <GalleryThumb key={src} src={src} alt={alt} onOpen={() => setLightboxIndex(i)} />
           ))}
         </AppleStagger>
         {galleryExpanded && (

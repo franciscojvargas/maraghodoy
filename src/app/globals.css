@@ -61,8 +61,43 @@ body {
   animation-delay: calc(250ms + var(--reveal-i, 0) * var(--reveal-step, 62ms));
 }
 
+/*
+ * Entradas de bloque. Mismo principio que el revelado por palabras: el estado
+ * oculto sólo lo pone JS en el cliente, así que el HTML prerenderizado —o sin
+ * JS— se ve entero. Sólo `from`: el `to` es el estilo normal del elemento, y el
+ * `backwards` aplica el `from` durante el retardo y nada una vez terminada.
+ *
+ * - `.enter`: entra al cargar (cabecera, hero). Lo anima el CSS sin esperar a JS.
+ * - `.reveal[data-inview]`: entra al llegar al viewport (AnimatedSection).
+ * - `[data-inview] > .reveal-item`: ídem, escalonado por `--reveal-i`.
+ */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 0)) scale(var(--reveal-scale, 1));
+  }
+}
+
+.enter,
+.reveal[data-inview="run"],
+[data-inview="run"] > .reveal-item {
+  animation: reveal-in var(--reveal-duration, 0.8s)
+    var(--reveal-ease, cubic-bezier(0.16, 1, 0.3, 1)) backwards;
+  animation-delay: calc(
+    var(--reveal-delay, 0ms) + var(--reveal-i, 0) * var(--reveal-stagger, 0ms)
+  );
+}
+
+.reveal[data-inview="pending"],
+[data-inview="pending"] > .reveal-item {
+  opacity: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal] .reveal-word {
+  [data-reveal] .reveal-word,
+  .enter,
+  .reveal[data-inview],
+  [data-inview] > .reveal-item {
     opacity: 1;
     animation: none;
   }

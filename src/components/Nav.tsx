@@ -11,9 +11,17 @@ import { siteConfig } from "@/content/site";
 import type { NavLabelKey } from "@/content";
 import { navLinks } from "@/content";
 import { IconSoundCloud, IconInstagram, IconYouTube, IconTikTok, IconResidentAdvisor } from "./SocialIcons";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { useSectionNav } from "@/hooks/useSectionNav";
+
+/** Entrada por CSS (`.enter`): con framer el HTML traía la cabecera a opacidad 0 hasta hidratar. */
+const headerEnter = {
+  "--reveal-y": "-20px",
+  "--reveal-duration": "0.5s",
+  "--reveal-delay": "200ms",
+  "--reveal-ease": "ease-out",
+} as CSSProperties;
 
 function getNavLabel(href: string, t: Record<NavLabelKey, string>) {
   const item = navLinks.find((l) => l.href === href);
@@ -56,12 +64,16 @@ export default function Nav() {
   const mounted = useMounted();
   const [scrolled, setScrolled] = useState(false);
 
+  // Sólo la home móvil es un slider sin scroll de página; el resto, incluido
+  // /eventos en el móvil, scrollea normal y la cabecera necesita su fondo.
+  const onSlider = isMobile && onHome;
+
   useEffect(() => {
-    if (isMobile) return;
+    if (onSlider) return;
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [isMobile]);
+  }, [onSlider]);
 
   useLockBodyScroll(menuOpen);
 
@@ -79,7 +91,7 @@ export default function Nav() {
 
   const closeMenu = () => setMenuOpen(false);
 
-  const headerScrolled = isMobile
+  const headerScrolled = onSlider
     ? currentSection !== "presentacion" || currentIndex > 0
     : scrolled;
 
@@ -222,13 +234,11 @@ export default function Nav() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className={`fixed top-0 left-0 right-0 z-[10000] transition-all duration-300 pointer-events-auto select-auto ${
+      <header
+        className={`enter fixed top-0 left-0 right-0 z-[10000] transition-all duration-300 pointer-events-auto select-auto ${
           headerScrolled ? "bg-black/90 backdrop-blur-xl border-b border-white/5" : "bg-transparent"
         }`}
+        style={headerEnter}
       >
         <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {isMobile ? (
@@ -327,7 +337,7 @@ export default function Nav() {
             <MenuButtonIcon open={menuOpen} />
           </button>
         </nav>
-      </motion.header>
+      </header>
 
       {mounted && createPortal(mobileMenu, document.body)}
     </>

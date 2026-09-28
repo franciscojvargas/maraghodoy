@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { SliderProvider } from "@/context/SliderContext";
 import Nav from "./Nav";
+import LanguageSuggestion from "./LanguageSuggestion";
 
 function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -35,6 +36,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <LanguageProvider>
         <SliderProvider>
           <Shell>{children}</Shell>
+          <LanguageSuggestion />
         </SliderProvider>
       </LanguageProvider>
     </MotionConfig>

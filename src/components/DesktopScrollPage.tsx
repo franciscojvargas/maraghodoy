@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import type { CSSProperties } from "react";
 import { usePresentationContent } from "@/hooks/usePresentationContent";
 import PrincipalContent from "@/components/PrincipalContent";
 
@@ -12,7 +12,17 @@ const RiderSection = dynamic(() => import("@/components/RiderSection"), { ssr: t
 const ContactSection = dynamic(() => import("@/components/ContactSection"), { ssr: true });
 const Footer = dynamic(() => import("@/components/Footer"), { ssr: true });
 
-const heroEase = [0.22, 1, 0.36, 1] as const;
+/**
+ * Entrada del hero por CSS (`.enter`): la anima el navegador al pintar, sin
+ * esperar a JS. Con framer el título salía en el HTML a opacidad 0 hasta hidratar.
+ */
+const heroEnter = (i: number, y: number, duration: number) =>
+  ({
+    "--reveal-y": `${y}px`,
+    "--reveal-duration": `${duration}s`,
+    "--reveal-delay": `${200 + i * 120}ms`,
+    "--reveal-ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+  }) as CSSProperties;
 
 export default function DesktopScrollPage() {
   const { hero } = usePresentationContent();
@@ -31,48 +41,17 @@ export default function DesktopScrollPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
         </div>
-        <motion.div
-          className="relative z-10 max-w-3xl"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: { staggerChildren: 0.12, delayChildren: 0.2 },
-            },
-            hidden: {},
-          }}
-        >
-          <motion.h1
-            className="text-5xl md:text-7xl font-bold tracking-tight"
-            variants={{
-              hidden: { opacity: 0, y: 32 },
-              visible: { opacity: 1, y: 0 },
-            }}
-            transition={{ duration: 0.9, ease: heroEase }}
-          >
+        <div className="relative z-10 max-w-3xl">
+          <h1 className="enter text-5xl md:text-7xl font-bold tracking-tight" style={heroEnter(0, 32, 0.9)}>
             {hero.title}
-          </motion.h1>
-          <motion.p
-            className="mt-6 text-xl text-neutral-300"
-            variants={{
-              hidden: { opacity: 0, y: 24 },
-              visible: { opacity: 1, y: 0 },
-            }}
-            transition={{ duration: 0.8, ease: heroEase }}
-          >
+          </h1>
+          <p className="enter mt-6 text-xl text-neutral-300" style={heroEnter(1, 24, 0.8)}>
             {hero.subtitle}
-          </motion.p>
-          <motion.p
-            className="mt-2 text-sm text-neutral-400 uppercase tracking-widest"
-            variants={{
-              hidden: { opacity: 0, y: 16 },
-              visible: { opacity: 1, y: 0 },
-            }}
-            transition={{ duration: 0.7, ease: heroEase }}
-          >
+          </p>
+          <p className="enter mt-2 text-sm text-neutral-400 uppercase tracking-widest" style={heroEnter(2, 16, 0.7)}>
             {hero.tagline}
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
       </section>
 
       <section id="principal" className="pt-16">

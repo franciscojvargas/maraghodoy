@@ -7,8 +7,11 @@ import { siteConfig, PERSON_ID } from "@/content/site";
 import ClientLayout from "@/components/ClientLayout";
 import { translations, type Lang } from "@/content";
 
+// Tiene que llamarse como la variable que lee `--font-sans` en globals.css: si
+// no existe, la pila entera cae a la fuente del sistema. Va en <html> para que
+// el tema de Tailwind, que se resuelve en :root, también la vea.
 const spaceGrotesk = Space_Grotesk({
-  variable: "--font-sans",
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
 });
@@ -147,8 +150,8 @@ export default function RootDocument({
   children: React.ReactNode;
 }) {
   return (
-    <html lang={lang} className="dark">
-      <body className={`${spaceGrotesk.variable} min-h-screen bg-black text-white antialiased font-sans`}>
+    <html lang={lang} className={`dark ${spaceGrotesk.variable}`}>
+      <body className="min-h-screen bg-black text-white antialiased font-sans">
         <link rel="preconnect" href="https://i.ytimg.com" />
         <link rel="dns-prefetch" href="https://i.ytimg.com" />
         <script
