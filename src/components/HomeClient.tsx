@@ -72,7 +72,9 @@ function MobileContent() {
     contacto: <ContactSection />,
   } as const;
 
-  return <MobileSectionShell>{sections[currentSection]}</MobileSectionShell>;
+  // La `key` crea un contenedor nuevo por sección: si se reutilizara, la sección
+  // nueva heredaría el scroll de la anterior y se abriría ya desplazada.
+  return <MobileSectionShell key={currentSection}>{sections[currentSection]}</MobileSectionShell>;
 }
 
 export default function HomeClient() {

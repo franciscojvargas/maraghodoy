@@ -8,6 +8,7 @@ export default function MobileSectionShell({ children }: { children: React.React
 
   return (
     <div
+      data-section-shell
       className="h-full min-h-0 w-full overflow-y-auto overflow-x-hidden bg-black pt-20 pb-12 touch-pan-y"
       style={{ WebkitOverflowScrolling: "touch" }}
     >

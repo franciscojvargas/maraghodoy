@@ -1,12 +1,39 @@
+/**
+ * Redimensiona y recomprime public/images (salvo events/, que es de
+ * prepare-posters.mjs). Idempotente: recomprimir a q80 un webp que ya es q80
+ * casi siempre pesa menos, así que se aceptaría y la foto perdería calidad en
+ * cada pasada. Por eso cada fichero procesado queda anotado con su hash en
+ * optimized-images.json, y sólo se toca lo nuevo o lo que ha cambiado.
+ */
 import sharp from "sharp";
-import { readdir, stat, rename, unlink } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { readdir, readFile, writeFile, stat, rename, unlink } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public", "images");
+const SCRIPTS = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.join(SCRIPTS, "..", "public", "images");
+const MANIFEST = path.join(SCRIPTS, "optimized-images.json");
 const QUALITY = 80;
 
+const sha256 = async (file) => createHash("sha256").update(await readFile(file)).digest("hex");
+
+/** Ruta relativa a public/images, siempre con "/", como clave del registro. */
+const key = (file) => path.relative(ROOT, file).split(path.sep).join("/");
+
+let manifest = {};
+try {
+  manifest = JSON.parse(await readFile(MANIFEST, "utf8"));
+} catch {
+  // Sin registro todo cuenta como nuevo.
+}
+
+const record = async (file) => {
+  manifest[key(file)] = await sha256(file);
+};
+
 async function optimizeWebp(file, maxDim) {
+  if (manifest[key(file)] === (await sha256(file))) return;
   const before = (await stat(file)).size;
   const tmp = `${file}.tmp.webp`;
   await sharp(file)
@@ -20,6 +47,7 @@ async function optimizeWebp(file, maxDim) {
   } else {
     await unlink(tmp);
   }
+  await record(file);
 }
 
 async function pngToWebp(file, maxDim) {
@@ -28,6 +56,7 @@ async function pngToWebp(file, maxDim) {
     .resize({ width: maxDim, height: maxDim, fit: "inside", withoutEnlargement: true })
     .webp({ quality: 85, effort: 6 })
     .toFile(out);
+  await record(out);
   console.log(`${path.relative(ROOT, file)} -> ${path.basename(out)}`);
 }
 
@@ -53,5 +82,8 @@ await sharp(path.join(ROOT, "hero.webp"))
   .jpeg({ quality: 82, mozjpeg: true })
   .toFile(path.join(ROOT, "og.jpg"));
 console.log("og.jpg regenerada.");
+
+const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
+await writeFile(MANIFEST, `${JSON.stringify(sorted, null, 2)}\n`);
 
 console.log("Listo.");
