@@ -102,41 +102,32 @@ function SliderInner({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [goToSlide]);
 
-  const touchTarget = useRef<EventTarget | null>(null);
+  /** En qué borde estaba el bloque con scroll propio al empezar el gesto. */
+  const touchEdges = useRef({ atTop: true, atBottom: true });
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
-    touchTarget.current = e.target;
+    // Dentro de un bloque con scroll propio (texto que no cabe en el pase), el
+    // gesto es para leer: sólo cambia de pase si ya estaba en el borde antes de
+    // empezar. Medido al soltar, un gesto que llega al final también pasaría de
+    // pase. Sin desborde los dos bordes son ciertos y todo funciona como siempre.
+    const container = (e.target as Element).closest?.("[data-scroll-container]") as HTMLElement | null;
+    touchEdges.current = container
+      ? {
+          atTop: container.scrollTop <= 1,
+          atBottom: container.scrollTop + container.clientHeight >= container.scrollHeight - 1,
+        }
+      : { atTop: true, atBottom: true };
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    const el = touchTarget.current as Node | null;
-    const endY = e.changedTouches[0].clientY;
-    const delta = touchStartY.current - endY;
+    const delta = touchStartY.current - e.changedTouches[0].clientY;
     const idx = currentIndexRef.current;
     const maxIndex = Math.max(0, total - 1);
+    const { atTop, atBottom } = touchEdges.current;
 
-    if (el && typeof (el as Element).closest === "function") {
-      const scrollable = (el as Element).closest("[data-scrollable]");
-      const scrollContainer = (el as Element).closest("[data-scroll-container]") as HTMLElement | null;
-      if (scrollable && scrollContainer) {
-        const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
-        const atBottom = scrollTop + clientHeight >= scrollHeight - 20;
-        const atTop = scrollTop <= 20;
-        if (atBottom && delta > SWIPE_THRESHOLD && idx < maxIndex) {
-          goToSlide(idx + 1);
-          return;
-        }
-        if (atTop && delta < -SWIPE_THRESHOLD && idx > 0) {
-          goToSlide(idx - 1);
-          return;
-        }
-        return;
-      }
-    }
-
-    if (delta > SWIPE_THRESHOLD && idx < maxIndex) goToSlide(idx + 1);
-    else if (delta < -SWIPE_THRESHOLD && idx > 0) goToSlide(idx - 1);
+    if (delta > SWIPE_THRESHOLD && atBottom && idx < maxIndex) goToSlide(idx + 1);
+    else if (delta < -SWIPE_THRESHOLD && atTop && idx > 0) goToSlide(idx - 1);
   };
 
   return (

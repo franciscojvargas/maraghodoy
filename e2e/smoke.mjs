@@ -283,12 +283,21 @@ try {
   await mp.locator('[role="dialog"] button', { hasText: "Media" }).click();
   await mp.waitForTimeout(800);
   check("móvil: sección Media abre", await mp.locator("h2", { hasText: /Imágenes|Images/ }).first().isVisible());
+  // Se baja hasta el final, donde está "Ver más": la siguiente sección tiene que
+  // abrirse arriba y no heredar este scroll.
+  await mp.evaluate(() => {
+    const shell = document.querySelector("[data-section-shell]");
+    if (shell) shell.scrollTop = shell.scrollHeight;
+  });
+  await mp.waitForTimeout(300);
 
   await mp.locator("button[aria-expanded]").click();
   await mp.waitForTimeout(500);
   await mp.locator('[role="dialog"] button', { hasText: /Eventos|Events/ }).click();
   await mp.waitForTimeout(800);
   check("móvil: sección Eventos abre", await mp.locator("h2", { hasText: /Eventos|Events/ }).first().isVisible());
+  const shellTop = await mp.evaluate(() => document.querySelector("[data-section-shell]")?.scrollTop ?? -1);
+  check("móvil: la sección nueva se abre arriba, sin el scroll de la anterior", shellTop === 0, `scrollTop ${shellTop}`);
 
   // La sección vive en la URL: enlaces profundos y botón Atrás.
   check(
