@@ -16,9 +16,9 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "framer-motion": "^12.43.0",
-    "next": "16.4.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "next": "16.4.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,8 +26,8 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "eslint": "^9.39.5",
-    "eslint-config-next": "16.4.0",
-    "playwright-core": "^1.64.0",
+    "eslint-config-next": "16.4.2",
+    "playwright-core": "^1.64.1",
     "serve": "^14.2.6",
     "sharp": "^0.35.5",
     "tailwindcss": "^4",
